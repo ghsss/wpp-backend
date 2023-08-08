@@ -34,6 +34,8 @@ app.get('/', async (req, res) => {
 app.listen(3000, async () => {
     const list = await AppointmentService.getCustomerAppointments('555499026453@c.us')
     .catch( err => console.error(err));
+    const list2 = await AppointmentService.getBarberShopAppointments(1)
+    .catch( err => console.error(err));
     
     // await WhatsappService.start();
     // const messagesList = [];
