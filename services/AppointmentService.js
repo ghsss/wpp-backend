@@ -117,7 +117,7 @@ class AppointmentService {
         return new Promise((resolve, reject) => {
             pool.query(
                 `SELECT 
-                a.id, a.dayAndTime, a.createdBy, a.modifiedBy, a.createdAt, a.modifiedAt,
+                a.id, a.dayAndTime, a.createdBy, a.modifiedBy, a.createdAt, a.modifiedAt, a.appointmentStatus,
                 c.id AS customerId, c.name AS customerName, c.phone as customerPhone,
                 bs.id as barberShopId, bs.name as barberShopName, bs.phone as barberShopPhone, bs.city as barberShopCity, cy.name as barberShopCityName, 
                 bs.neighborhood as barberShopNeighborhood, bs.street as barberShopStreet, bs.number as barberShopNumber, bs.complement barberShopComplement, 
