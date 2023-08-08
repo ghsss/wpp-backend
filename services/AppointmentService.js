@@ -65,6 +65,7 @@ class AppointmentService {
                     //     "id": 3,
                     //     "dayAndTime": "2023-08-08T04:46:46.000Z",
                     //     "createdBy": null,
+                    //     "appointmentStatus": "Agendado",
                     //     "modifiedBy": null,
                     //     "createdAt": "2023-08-08T04:46:46.000Z",
                     //     "modifiedAt": "2023-08-08T04:46:46.000Z",
