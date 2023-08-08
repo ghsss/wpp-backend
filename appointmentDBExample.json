@@ -1,0 +1,28 @@
+[
+    {
+        "id": 3,
+        "dayAndTime": "2023-08-08T04:46:46.000Z",
+        "createdBy": null,
+        "modifiedBy": null,
+        "createdAt": "2023-08-08T04:46:46.000Z",
+        "modifiedAt": "2023-08-08T04:46:46.000Z",
+        "customerId": "555499026453@c.us",
+        "customerName": "Gabriel",
+        "customerPhone": "555499026453",
+        "barberShopId": 1,
+        "barberShopName": "Barbearia do Gabriel",
+        "barberShopPhone": "",
+        "barberShopCity": "CZO",
+        "barberShopCityName": "Carazinho",
+        "barberShopNeighborhood": "Centro",
+        "barberShopStreet": "Alexandre da Motta",
+        "barberShopNumber": "1264",
+        "barberShopComplement": null,
+        "geolocationLatitude": "-28",
+        "geolocationLongitude": "-53",
+        "barberShopWppId": "",
+        "workerId": "555499026453@c.us",
+        "workerName": "Gabriel",
+        "workerPhone": "555499026453"
+    }
+]

@@ -1,4 +1,23 @@
 class CreatedBy {
+    #id;
+    #name;
+    #phone;
+}
+
+class Customer {
+    #id;
+    #name;
+    #phone;
+}
+
+class Barber {
+    #id;
+    #name;
+    #phone;
+}
+
+class Barbershop {
+    #id;
     #name;
     #phone;
 }
@@ -16,11 +35,16 @@ class AppointmentStatus {
 
 class Appointment {
 
+    #id = Number;
+    #createdAt = Date;
+    #modifiedAt = Date;
     #createdBy = CreatedBy;
-    #number = Number;
-    #startDateTime = Date;
-    #endDateTime = Date;
-    #status = AppointmentStatus;
+    #modifiedBy = CreatedBy;
+    #customer = Customer;
+    #dayAndTime = Date;
+    #barberShop = Barbershop;
+    #barberShopWorker = Barber;
+    #appointmentStatus = AppointmentStatus;
 
     constructor ( jsonData ) {
 
@@ -33,7 +57,7 @@ class Appointment {
             }
         }
 
-        serialize();
+        this.serialize(jsonData);
     
     }
 

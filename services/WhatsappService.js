@@ -1,43 +1,220 @@
-const { Client } = require('whatsapp-web.js');
-const { AppointmentClass } = require('./AppointmentService');
+const qrcode = require('qrcode-terminal');
+const { Client, MessageTypes, MessageMedia, Message, LocalAuth } = require('whatsapp-web.js');
+const { AppointmentService } = require('./AppointmentService');
+// const { AppointmentService } = require('./AppointmentService');
 
-const client = new Client();
 
-client.on('qr', (qr) => {
-    // Generate and scan this code with your phone
-    console.log('QR RECEIVED', qr);
-});
+class TextMessage {
 
-client.on('ready', () => {
-    console.log('Client is ready!');
-});
+    chatId = new String();
+    text = new String();
 
-client.on('message', msg => {
-    if (msg.body == '!ping') {
-        msg.reply('pong');
+    constructor(chatId = String, text = String) {
+        const constructorTypes = [
+            'string',
+            'string'
+        ]
+        if (typeof chatId != constructorTypes[0]) {
+            throw 'Expected a ' + constructorTypes[0].toString() + ' type as 1 parameter';
+        } else if (typeof text != constructorTypes[1]) {
+            throw 'Expected a ' + constructorTypes[1].toString() + ' type as 2 parameter';
+        } else {
+            this.chatId = chatId;
+            this.text = text;
+        }
+        console.log('Message instance: ' + JSON.stringify(this));
     }
-});
 
-client.initialize();
+}
+
+module.exports.TextMessage = TextMessage;
+
+class MediaMessage {
+    
+    content = new MessageMedia();
+
+    constructor(chatId = new String(), content = new MessageMedia()) {
+        const constructorTypes = [
+            String,
+            MessageMedia
+        ]
+        if (typeof chatId !== constructorTypes[0]) {
+            throw 'Expected a string type as 1 parameter';
+        } else if (typeof content !== constructorTypes[1]) {
+            throw 'Expected a MessageMedia type as 2 parameter';
+        } else {
+            this.chatId = chatId;
+            this.content = content;
+        }
+        console.log('Message instance: ' + JSON.stringify(this));
+    }
+
+}
+
+module.exports.MediaMessage = MediaMessage
 
 class WhatsappService {
 
-    #client = Client;
+    #client = new Client({
+        authStrategy: new LocalAuth({ clientId: "client-one" })
+    });
 
-    constructor ( options ) {
+    messages = new Array<TextMessage>([])
 
-        const defaultOptions = {
-            token: '',
-            auth: ''
+    async #initializeClient() {
+        return new Promise((resolve, reject) => {
+            try {
+                this.#client.on('qr', (qr) => {
+                    // Generate and scan this code with your phone
+                    console.log('QR RECEIVED', qr);
+                    qrcode.generate(qr, { small: true });
+                });
+                this.#client.on('ready', () => {
+                    resolve();
+                    console.log('Client is ready!');
+                });
+                this.#client.initialize();   
+            } catch (error) {
+                reject('Error initializing client: '+error);
+            }
+        })
+    }
+
+    async sendTextMessages(messages) {
+        console.log(messages);
+        for await ( let message of messages ) {
+            const m = await this.#client.sendMessage(message.chatId, message.text);
+            console.log(JSON.stringify(m));
+        }
+    }
+
+    async start() {
+        await this.#initializeClient();
+        const client = this.#client;
+        try {
+            client.on('message', msg => {
+                // if (msg.body == '!ping') {
+                //     msg.reply('pong');
+                // }
+                // callback(msg);
+                // msg.
+                this.processIncomingMessages(msg);
+            });
+        } catch (error) {
+            console.error('Error: ' + error);
+        }
+    }
+
+    async getChats() {
+        const chats = await this.#client.getChats();
+        return chats;
+    }
+
+    async processIncomingMessages(msg = Message) {
+
+        const commands = {
+            'defaultMessage': () => {
+                return `OLÁ, ${msg.author}! BEM VINDO À BARBEARIA DO GABRIEL! \n +
+                    PARA LISTAR SEUS HORÁRIOS AGENDADOS DIGITE: /horarios`
+            },
+            '/horarios': () => {
+                // const customerAppointments = [];//getCustomerAppointments(msg.from);
+                const customerAppointments = AppointmentService.getCustomerAppointments(msg.from);
+                if (customerAppointments.length == 0) {
+                    const message = 'Você não possui nenhum agendamento. \nRealize o agendamento através do Aplicativo: Bar Bear.';
+                    this.#client.sendMessage(msg.from, message);
+                } else {
+                    for (const customerAppointment of customerAppointments) {
+                        console.log('Customer appointment: ' + JSON.stringify(customerAppointment, null, 4));
+                    }
+                }
+            },
+            '/cancelar': (appointmentId) => {
+                AppointmentService.cancelAppointment(appointmentId);
+            }
+        }
+        if (Object.keys(commands).indexOf(msg.body) > 0) {
+            commands[msg.body]();
+        } else {
+            commands['defaultMessage']();
+        }
+    }
+
+    async waitConnect() {
+
+        const pairingStates = [
+            'OPENING',
+            'PAIRING',
+            'UNLAUNCHED',
+            'UNPAIRED',
+            'UNPAIRED_IDLE'
+        ];
+
+        const wait10Seconds = async () => {
+            setTimeout( () => {
+                console.log('10 seconds waiting finished.');
+            }, 10000);
+        };
+
+        await wait10Seconds();
+
+        let clientState = await this.getClientState();
+
+        while ( typeof clientState == 'undefined' || pairingStates.includes(clientState) ) {
+
+            setTimeout( async () => {
+
+                clientState = await this.getClientState();
+
+            }, 15000);
+
         }
 
-        
+    }
 
-        if ( client.constructor.name != 'Client' ) {
-            throw 'Client with wrong class type';
+    async getClientState() {
+        const client = this.#client;
+        try {
+            const connectedStates = [
+                'CONNECTED',
+                'OPENING',
+                'PAIRING'
+            ];
+            const unpairedStates = [
+                'UNLAUNCHED',
+                'UNPAIRED',
+                'UNPAIRED_IDLE'
+            ];
+            const errorStates = [
+                'TOS_BLOCK',
+                'TIMEOUT',
+                'SMB_TOS_BLOCK',
+                'PROXYBLOCK',
+                'DEPRECATED_VERSION',
+                'CONFLICT'
+            ];
+            const clientState = await client.getState();
+            console.log('CLIENT STATE: ' + clientState);
+            if (errorStates.indexOf(clientState) < 0) {
+                console.error('Client error. Restart the client and try again.');
+            } else if (unpairedStates.indexOf(clientState) < 0) {
+                console.error('Client is unpaired. Please scan the QR Code and try again');
+            } else {
+                console.log('Client connected. Wait some time and try again or restart the client.');
+            }
+            return clientState;
+        } catch (error) {
+            try {
+                console.error('Error returning client state: ' + error);
+                console.error('Reseting client state...');
+                await this.#client.resetState();
+                console.error('Client state reseted!');
+            } catch (error2) {
+                console.error('Error reseting client state: ' + error2);
+            }
         }
     }
 
 }
 
-module.exports.WhatsappService = client;
+module.exports.WhatsappService = new WhatsappService();

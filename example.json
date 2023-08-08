@@ -1,0 +1,182 @@
+[
+    {
+        "id": {
+            "server": "c.us",
+            "user": "554491733494",
+            "_serialized": "554491733494@c.us"
+        },
+        "name": "+55 44 9173-3494",
+        "isGroup": false,
+        "unreadCount": 0,
+        "timestamp": 1617651913,
+        "pinned": false,
+        "isMuted": false,
+        "muteExpiration": 0,
+        "lastMessage": {
+            "_data": {
+                "id": {
+                    "fromMe": true,
+                    "remote": "554491733494@c.us",
+                    "id": "B2AAC2DDF14782748827DDBA4EB55DB2",
+                    "_serialized": "true_554491733494@c.us_B2AAC2DDF14782748827DDBA4EB55DB2"
+                },
+                "body": "554491733494@c.us",
+                "type": "e2e_notification",
+                "subtype": "identity",
+                "t": 1649088129,
+                "notifyName": "",
+                "from": {
+                    "server": "c.us",
+                    "user": "555499026453",
+                    "_serialized": "555499026453@c.us"
+                },
+                "to": {
+                    "server": "c.us",
+                    "user": "554491733494",
+                    "_serialized": "554491733494@c.us"
+                },
+                "self": "in",
+                "ack": 0,
+                "invis": false,
+                "star": false,
+                "kicNotified": false,
+                "isFromTemplate": false,
+                "pollInvalidated": false,
+                "isSentCagPollCreation": false,
+                "latestEditMsgKey": null,
+                "latestEditSenderTimestampMs": null,
+                "mentionedJidList": [],
+                "groupMentions": [],
+                "isVcardOverMmsDocument": false,
+                "isForwarded": false,
+                "labels": [],
+                "hasReaction": false,
+                "productHeaderImageRejected": false,
+                "lastPlaybackProgress": 0,
+                "isDynamicReplyButtonsMsg": false,
+                "isMdHistoryMsg": false,
+                "stickerSentTs": 0,
+                "isAvatar": false,
+                "lastUpdateFromServerTs": 0,
+                "requiresDirectConnection": false,
+                "invokedBotWid": null,
+                "links": []
+            },
+            "id": {
+                "fromMe": true,
+                "remote": "554491733494@c.us",
+                "id": "B2AAC2DDF14782748827DDBA4EB55DB2",
+                "_serialized": "true_554491733494@c.us_B2AAC2DDF14782748827DDBA4EB55DB2"
+            },
+            "ack": 0,
+            "hasMedia": false,
+            "body": "554491733494@c.us",
+            "type": "e2e_notification",
+            "timestamp": 1649088129,
+            "from": "555499026453@c.us",
+            "to": "554491733494@c.us",
+            "deviceType": "android",
+            "isForwarded": false,
+            "forwardingScore": 0,
+            "isStatus": false,
+            "isStarred": false,
+            "fromMe": true,
+            "hasQuotedMsg": false,
+            "hasReaction": false,
+            "vCards": [],
+            "mentionedIds": [],
+            "isGif": false,
+            "links": []
+        }
+    },
+    {
+        "id": {
+            "server": "c.us",
+            "user": "5521996464891",
+            "_serialized": "5521996464891@c.us"
+        },
+        "name": "+55 21 99646-4891",
+        "isGroup": false,
+        "unreadCount": 0,
+        "timestamp": 1616889495,
+        "pinned": false,
+        "isMuted": false,
+        "muteExpiration": 0,
+        "lastMessage": {
+            "_data": {
+                "id": {
+                    "fromMe": true,
+                    "remote": "5521996464891@c.us",
+                    "id": "88CAA46E4355E6D2049803B4431BFD7B",
+                    "_serialized": "true_5521996464891@c.us_88CAA46E4355E6D2049803B4431BFD7B"
+                },
+                "body": "5521996464891@c.us",
+                "type": "e2e_notification",
+                "subtype": "identity",
+                "t": 1676305657,
+                "notifyName": "",
+                "from": {
+                    "server": "c.us",
+                    "user": "555499026453",
+                    "_serialized": "555499026453@c.us"
+                },
+                "to": {
+                    "server": "c.us",
+                    "user": "5521996464891",
+                    "_serialized": "5521996464891@c.us"
+                },
+                "self": "in",
+                "ack": 0,
+                "invis": false,
+                "star": false,
+                "kicNotified": false,
+                "isFromTemplate": false,
+                "pollInvalidated": false,
+                "isSentCagPollCreation": false,
+                "latestEditMsgKey": null,
+                "latestEditSenderTimestampMs": null,
+                "mentionedJidList": [],
+                "groupMentions": [],
+                "isVcardOverMmsDocument": false,
+                "isForwarded": false,
+                "labels": [],
+                "hasReaction": false,
+                "productHeaderImageRejected": false,
+                "lastPlaybackProgress": 0,
+                "isDynamicReplyButtonsMsg": false,
+                "isMdHistoryMsg": false,
+                "stickerSentTs": 0,
+                "isAvatar": false,
+                "lastUpdateFromServerTs": 0,
+                "requiresDirectConnection": false,
+                "invokedBotWid": null,
+                "links": []
+            },
+            "id": {
+                "fromMe": true,
+                "remote": "5521996464891@c.us",
+                "id": "88CAA46E4355E6D2049803B4431BFD7B",
+                "_serialized": "true_5521996464891@c.us_88CAA46E4355E6D2049803B4431BFD7B"
+            },
+            "ack": 0,
+            "hasMedia": false,
+            "body": "5521996464891@c.us",
+            "type": "e2e_notification",
+            "timestamp": 1676305657,
+            "from": "555499026453@c.us",
+            "to": "5521996464891@c.us",
+            "deviceType": "android",
+            "isForwarded": false,
+            "forwardingScore": 0,
+            "isStatus": false,
+            "isStarred": false,
+            "fromMe": true,
+            "hasQuotedMsg": false,
+            "hasReaction": false,
+            "vCards": [],
+            "mentionedIds": [],
+            "isGif": false,
+            "links": []
+        }
+    }
+]

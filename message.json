@@ -1,0 +1,81 @@
+{
+    "_data": {
+        "id": {
+            "fromMe": true,
+            "remote": {
+                "server": "c.us",
+                "user": "555499026453",
+                "_serialized": "555499026453@c.us"
+            },
+            "id": "3EB0F21925CD939A0A371E",
+            "self": "out",
+            "_serialized": "true_555499026453@c.us_3EB0F21925CD939A0A371E_out"
+        },
+        "body": "Oi i i",
+        "type": "chat",
+        "t": 1691465934,
+        "from": {
+            "server": "c.us",
+            "user": "555499026453",
+            "_serialized": "555499026453@c.us"
+        },
+        "to": {
+            "server": "c.us",
+            "user": "555499026453",
+            "_serialized": "555499026453@c.us"
+        },
+        "self": "out",
+        "ack": 0,
+        "isNewMsg": true,
+        "star": false,
+        "kicNotified": false,
+        "isFromTemplate": false,
+        "pollInvalidated": false,
+        "isSentCagPollCreation": false,
+        "latestEditMsgKey": null,
+        "latestEditSenderTimestampMs": null,
+        "mentionedJidList": [],
+        "groupMentions": [],
+        "isVcardOverMmsDocument": false,
+        "isForwarded": false,
+        "hasReaction": false,
+        "productHeaderImageRejected": false,
+        "lastPlaybackProgress": 0,
+        "isDynamicReplyButtonsMsg": false,
+        "isMdHistoryMsg": false,
+        "stickerSentTs": 0,
+        "isAvatar": false,
+        "lastUpdateFromServerTs": 0,
+        "requiresDirectConnection": null,
+        "invokedBotWid": null
+    },
+    "id": {
+        "fromMe": true,
+        "remote": {
+            "server": "c.us",
+            "user": "555499026453",
+            "_serialized": "555499026453@c.us"
+        },
+        "id": "3EB0F21925CD939A0A371E",
+        "self": "out",
+        "_serialized": "true_555499026453@c.us_3EB0F21925CD939A0A371E_out"
+    },
+    "ack": 0,
+    "hasMedia": false,
+    "body": "Oi i i",
+    "type": "chat",
+    "timestamp": 1691465934,
+    "from": "555499026453@c.us",
+    "to": "555499026453@c.us",
+    "deviceType": "android",
+    "isForwarded": false,
+    "forwardingScore": 0,
+    "isStatus": false,
+    "isStarred": false,
+    "fromMe": true,
+    "hasQuotedMsg": false,
+    "hasReaction": false,
+    "vCards": [],
+    "mentionedIds": [],
+    "isGif": false
+}
