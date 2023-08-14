@@ -44,7 +44,11 @@ app.listen(3000, async () => {
     
     const auth = await AuthService.login('555499026453@c.us', 'BARBERSHOP');
     console.log(JSON.stringify(auth, null, 4));
-
+    const tok = AuthService.generateToken('555499026453@c.us');
+    console.log(tok);
+    AuthService.verifyToken('555499026453@c.us', tok, hex => {
+        console.log(hex);
+    });
     // const newAppointments = auth.response[0].user.appointments;
     // await AppointmentService.newAppointments(newAppointments)
     //     .then(async insertRes => {
