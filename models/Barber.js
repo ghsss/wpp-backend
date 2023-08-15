@@ -1,50 +1,8 @@
-class CreatedBy {
-    #id;
-    #name;
-    #phone;
-}
-
-class Customer {
-    #id;
-    #name;
-    #phone;
-}
 
 class Barber {
     #id;
     #name;
     #phone;
-}
-
-class Barbershop {
-    #id;
-    #name;
-    #phone;
-}
-
-class AppointmentStatus {
-    #id;
-    #description;
-
-    constructor (json) {
-        for ( const k of  Object.keys(json) ) {
-            this[k] = json[k];
-        }
-    }
-}
-
-class Appointment {
-
-    #id = Number;
-    #createdAt = Date;
-    #modifiedAt = Date;
-    #createdBy = CreatedBy;
-    #modifiedBy = CreatedBy;
-    #customer = Customer;
-    #dayAndTime = Date;
-    #barberShop = Barbershop;
-    #barberShopWorker = Barber;
-    #appointmentStatus = AppointmentStatus;
 
     constructor ( jsonData ) {
         if ( typeof jsonData == 'string' ) {
@@ -79,7 +37,7 @@ class Appointment {
         // #modifiedAt = Date;
         // #createdBy = CreatedBy;
         // #modifiedBy = CreatedBy;
-        // #customer = Customer;
+        // #Barber = Barber;
         // #dayAndTime = Date;
         // #barberShop = Barbershop;
         // #barberShopWorker = Barber;
@@ -92,9 +50,9 @@ class Appointment {
         //     "createdAt": "2023-08-13T13:29:21.000Z",
         //     "modifiedAt": "2023-08-13T13:29:21.000Z",
         //     "appointmentStatus": "Agendado",
-        //     "customerId": "555499026453@c.us",
-        //     "customerName": "Gabriel",
-        //     "customerPhone": "555499026453",
+        //     "BarberId": "555499026453@c.us",
+        //     "BarberName": "Gabriel",
+        //     "BarberPhone": "555499026453",
         //     "barberShopId": 1,
         //     "barberShopName": "Barbearia do Gabriel",
         //     "barberShopPhone": "555499026453",
@@ -112,16 +70,11 @@ class Appointment {
         //     "workerPhone": "555499026453"
         // }
         const databaseRecordPropsDict = {
-            'id': 'id',
+            'workerId': 'id',
             // 'createdAt': 'createdAt',
             // 'modifiedAt': 'modifiedAt',
-            'createdBy': 'createdBy',
-            'modifiedBy': 'modifiedBy',
-            'customerId': 'customer',
-            'dayAndTime': 'dayAndTime',
-            'barberShopId': 'barberShop',
-            'workerId': 'barberShopWorker',
-            'appointmentStatus': 'appointmentStatus'
+            'workerName': 'name',
+            'workerPhone': 'phone'
         }
         const databaseRecord = {};
         for ( const prop in this ) {
@@ -143,6 +96,4 @@ class Appointment {
 
 }
 
-module.exports.AppointmentClass = Appointment;
-module.exports.AppointmentStatusClass = AppointmentStatus;
-module.exports.CreatedByClass = CreatedBy;
+module.exports.BarberClass = Barber;

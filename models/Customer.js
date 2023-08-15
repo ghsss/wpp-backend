@@ -1,50 +1,8 @@
-class CreatedBy {
-    #id;
-    #name;
-    #phone;
-}
 
 class Customer {
     #id;
     #name;
     #phone;
-}
-
-class Barber {
-    #id;
-    #name;
-    #phone;
-}
-
-class Barbershop {
-    #id;
-    #name;
-    #phone;
-}
-
-class AppointmentStatus {
-    #id;
-    #description;
-
-    constructor (json) {
-        for ( const k of  Object.keys(json) ) {
-            this[k] = json[k];
-        }
-    }
-}
-
-class Appointment {
-
-    #id = Number;
-    #createdAt = Date;
-    #modifiedAt = Date;
-    #createdBy = CreatedBy;
-    #modifiedBy = CreatedBy;
-    #customer = Customer;
-    #dayAndTime = Date;
-    #barberShop = Barbershop;
-    #barberShopWorker = Barber;
-    #appointmentStatus = AppointmentStatus;
 
     constructor ( jsonData ) {
         if ( typeof jsonData == 'string' ) {
@@ -115,13 +73,8 @@ class Appointment {
             'id': 'id',
             // 'createdAt': 'createdAt',
             // 'modifiedAt': 'modifiedAt',
-            'createdBy': 'createdBy',
-            'modifiedBy': 'modifiedBy',
-            'customerId': 'customer',
-            'dayAndTime': 'dayAndTime',
-            'barberShopId': 'barberShop',
-            'workerId': 'barberShopWorker',
-            'appointmentStatus': 'appointmentStatus'
+            'name': 'name',
+            'phone': 'phone'
         }
         const databaseRecord = {};
         for ( const prop in this ) {
@@ -143,6 +96,4 @@ class Appointment {
 
 }
 
-module.exports.AppointmentClass = Appointment;
-module.exports.AppointmentStatusClass = AppointmentStatus;
-module.exports.CreatedByClass = CreatedBy;
+module.exports.CustomerClass = Customer;
