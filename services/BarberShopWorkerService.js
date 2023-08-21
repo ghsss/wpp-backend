@@ -1,11 +1,17 @@
-const { CustomerClass } = require("../models/Customer");
+// const databaseRecordPropsDict = {
+//     'service': 'name', 'serviceDescription': 'description', 'serviceDurationInMinutes': 'durationInMinutes',
+//     'availableDays': 'availableDays', 'availableHours': 'availableHours', 'barberShopId': 'barberShop',
+//     'workerId': 'barberShopWorker'
+// }
+const { BarberShopWorkerServiceClass } = require("../models/BarberShopWorkerServiceClass");
+// const { BarberShopStatusService } = require("./BarberShopStatusService");
 const { DatabaseService } = require("./DatabaseService");
 
-class CustomerService {
+class BarberShopWorkerServiceService {
 
     database = DatabaseService;
-    #selectedcustomer = CustomerClass;
-    #customerList = new Array(CustomerClass);
+    // #selectedbarberShop = BarberShopWorkerServiceClass;
+    // #barberShopList = new Array(BarberShopWorkerServiceClass);
 
     constructor(jsonData) {
 
@@ -26,7 +32,7 @@ class CustomerService {
 
     }
 
-    async getCustomers(customerWppId) {
+    async getBarberShopServices(barberShopWppId) {
         const pool = this.database.getPool();
         const response = {
             success: false,
@@ -37,34 +43,43 @@ class CustomerService {
         return new Promise((resolve, reject) => {
             pool.query(
                 `SELECT 
-                c.id AS customerId, c.name AS customerName, c.phone as customerPhone
-                FROM customer AS c`,
-                // [customerWppId, 'Agendado'],
+                *,
+                bs.id as barberShopId, bs.name as barberShopName, bs.phone as barberShopPhone, bs.city as barberShopCity, cy.name as barberShopCityName, 
+                bs.neighborhood as barberShopNeighborhood, bs.street as barberShopStreet, bs.number as barberShopNumber, bs.complement barberShopComplement, 
+                bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId,
+                b.id AS workerWppId, b.name AS workerName, b.phone AS workerPhone, bsw.id AS workerId 
+                FROM barberShopWorkerService AS a 
+                JOIN barberShop AS bs ON a.barberShop = bs.id 
+                JOIN barberShopWorker AS bsw ON a.barberShopWorker = bsw.id 
+                JOIN barber AS b ON b.id = bsw.worker
+                JOIN city AS cy ON cy.id = bs.city 
+                WHERE bs.wppId = ?`,
+                [barberShopWppId],
                 function (err, rows, fields) {
                     if (err) reject(err);
                     // {
                     //     "id": 3,
                     //     "dayAndTime": "2023-08-08T04:46:46.000Z",
                     //     "createdBy": null,
-                    //     "customerStatus": "Agendado",
+                    //     "barberShopStatus": "Agendado",
                     //     "modifiedBy": null,
                     //     "createdAt": "2023-08-08T04:46:46.000Z",
                     //     "modifiedAt": "2023-08-08T04:46:46.000Z",
                     //     "customerId": "555499026453@c.us",
                     //     "customerName": "Gabriel",
                     //     "customerPhone": "555499026453",
-                    //     "customerId": 1,
-                    //     "customerName": "Barbearia do Gabriel",
-                    //     "customerPhone": "",
-                    //     "customerCity": "CZO",
-                    //     "customerCityName": "Carazinho",
-                    //     "customerNeighborhood": "Centro",
-                    //     "customerStreet": "Alexandre da Motta",
-                    //     "customerNumber": "1264",
-                    //     "customerComplement": null,
+                    //     "barberShopId": 1,
+                    //     "barberShopName": "Barbearia do Gabriel",
+                    //     "barberShopPhone": "",
+                    //     "barberShopCity": "CZO",
+                    //     "barberShopCityName": "Carazinho",
+                    //     "barberShopNeighborhood": "Centro",
+                    //     "barberShopStreet": "Alexandre da Motta",
+                    //     "barberShopNumber": "1264",
+                    //     "barberShopComplement": null,
                     //     "geolocationLatitude": "-28",
                     //     "geolocationLongitude": "-53",
-                    //     "customerWppId": "",
+                    //     "barberShopWppId": "",
                     //     "workerId": "555499026453@c.us",
                     //     "workerName": "Gabriel",
                     //     "workerPhone": "555499026453"
@@ -73,8 +88,8 @@ class CustomerService {
                     if (Array.isArray(rows)) {
                         console.log('Fist row ' + JSON.stringify(rows[0], null, 4));
                         for (const row of rows) {
-                            let customerStatus = new CustomerClass(row);
-                            newList.push(customerStatus);
+                            let barberShopStatus = new BarberShopWorkerServiceClass(row);
+                            newList.push(barberShopStatus);
                         }
                     }
                     console.log('List: ' + JSON.stringify(newList));
@@ -84,52 +99,7 @@ class CustomerService {
 
     }
 
-    getCustomers() {
-        const pool = this.database.getPool();
-        const response = {
-            success: false,
-            response: []
-        }
-        const newList = [];
-        // const newList = new Array(CustomerClass);
-        return new Promise((resolve, reject) => {
-            pool.query(
-                `SELECT 
-                c.id AS customerId, c.name AS customerName, c.phone as customerPhone
-                FROM customer AS c`,
-                // [customerId],
-                function (err, rows, fields) {
-                    if (err) reject(err);
-                    // {
-                    //     "id": 3,
-                    //     "customerId": 1,
-                    //     "customerName": "Barbearia do Gabriel",
-                    //     "customerPhone": "",
-                    //     "customerCity": "CZO",
-                    //     "customerCityName": "Carazinho",
-                    //     "customerNeighborhood": "Centro",
-                    //     "customerStreet": "Alexandre da Motta",
-                    //     "customerNumber": "1264",
-                    //     "customerComplement": null,
-                    //     "geolocationLatitude": "-28",
-                    //     "geolocationLongitude": "-53",
-                    //     "customerWppId": "",
-                    // }
-                    // Connection is automatically released when query resolves
-                    if (Array.isArray(rows)) {
-                        console.log('Fist row ' + JSON.stringify(rows[0], null, 4));
-                        for (const row of rows) {
-                            let customerStatus = new CustomerClass(row);
-                            newList.push(customerStatus);
-                        }
-                    }
-                    resolve(newList);
-                });
-        });
-
-    }
-
-    newCustomers(jsonData) {
+    newBarberShopWorkerServices(jsonData) {
         if (typeof jsonData == 'string') {
             try {
                 jsonData = JSON.parse(jsonData);
@@ -137,44 +107,44 @@ class CustomerService {
                 throw 'Error: expected a valid JSON as argument.\n' + error;
             }
         }
-        const newcustomersList = [];
-        // const newcustomersList = new Array(CustomerClass);
+        const newbarberShopWorkerServicesList = [];
+        // const newbarberShopWorkerServicesList = new Array(BarberShopWorkerServiceClass);
         if (Array.isArray(jsonData)) {
-            console.log('newcustomer Batch Input rows: ' + jsonData.length);
-            console.log('newcustomer Batch first input: ' + JSON.stringify(jsonData[0], null, 4));
-            for (const customerRow of jsonData) {
-                const customer = new CustomerClass(customerRow);
-                const customerRecord = customer.toDatabaseRecord();
-                newcustomersList.push(customerRecord);
+            console.log('newbarberShop Batch Input rows: ' + jsonData.length);
+            console.log('newbarberShop Batch first input: ' + JSON.stringify(jsonData[0], null, 4));
+            for (const barberShopRow of jsonData) {
+                const barberShop = new BarberShopWorkerServiceClass(barberShopRow);
+                const barberShopRecord = barberShop.toDatabaseRecord();
+                newbarberShopWorkerServicesList.push(barberShopRecord);
             }
         } else {
-            console.log('newcustomer Input: ' + JSON.stringify(jsonData, null, 4));
-            const customer = new CustomerClass(jsonData);
-            const customerRecord = customer.toDatabaseRecord();
-            newcustomersList.push(customerRecord);
+            console.log('newbarberShop Input: ' + JSON.stringify(jsonData, null, 4));
+            const barberShop = new BarberShopWorkerServiceClass(jsonData);
+            const barberShopRecord = barberShop.toDatabaseRecord();
+            newbarberShopWorkerServicesList.push(barberShopRecord);
         }
-        console.log('New customers: ' + JSON.stringify(newcustomersList, null, 4));
+        console.log('New barberShops: ' + JSON.stringify(newbarberShopWorkerServicesList, null, 4));
         return new Promise((resolve, reject) => {
             const response = {
                 success: false,
                 response: []
             }
-            if (newcustomersList.length == 0) { response.error = ['Error: empty list. Nothing to insert']; reject(response) };
+            if (newbarberShopWorkerServicesList.length == 0) { response.error = ['Error: empty list. Nothing to insert']; reject(response) };
             const pool = this.database.getPool();
             const newList = [];
-            // const newList = new Array(CustomerClass);
+            // const newList = new Array(BarberShopWorkerServiceClass);
             const keys = [
-                'id', 'name', 'phone'
+                'name', 'city', 'neighborhood', 'street', 'number', 'complement', 'phone', 'geolocationLatitude', 'geolocationLongitude', 'wppId'
             ]
-            for (const customer of newcustomersList) {
-                let customerOrderedValues = [];
+            for (const barberShop of newbarberShopWorkerServicesList) {
+                let barberShopOrderedValues = [];
                 for (const key of keys) {
-                    customerOrderedValues.push(customer[key] || null);
+                    barberShopOrderedValues.push(barberShop[key] || null);
                 }
-                newList.push(customerOrderedValues);
+                newList.push(barberShopOrderedValues);
             }
             console.log('Values >  ' + JSON.stringify(newList, null, 4));
-            const insertTable = 'INSERT INTO customer(';
+            const insertTable = 'INSERT INTO barberShop(';
             let setStatement = '';
             for (const key of keys) {
                 if (keys.indexOf(key) == 0) {
@@ -207,7 +177,7 @@ class CustomerService {
         });
     }
 
-    async updateCustomers(jsonData) {
+    async updateBarberShops(jsonData) {
         if (typeof jsonData == 'string') {
             try {
                 jsonData = JSON.parse(jsonData);
@@ -215,29 +185,29 @@ class CustomerService {
                 console.error('Error: expected a valid JSON as argument.\n' + error);
             }
         }
-        const newcustomersList = [];
+        const newbarberShopWorkerServicesList = [];
         if (Array.isArray(jsonData)) {
-            console.log('newcustomer Batch Input rows: ' + jsonData.length);
-            console.log('newcustomer Batch first input: ' + JSON.stringify(jsonData[0], null, 4));
-            for (const customerRow of jsonData) {
-                const customer = new CustomerClass(customerRow);
-                const customerRecord = customer.toDatabaseRecord();
-                newcustomersList.push(customerRecord);
+            console.log('newbarberShop Batch Input rows: ' + jsonData.length);
+            console.log('newbarberShop Batch first input: ' + JSON.stringify(jsonData[0], null, 4));
+            for (const barberShopRow of jsonData) {
+                const barberShop = new BarberShopWorkerServiceClass(barberShopRow);
+                const barberShopRecord = barberShop.toDatabaseRecord();
+                newbarberShopWorkerServicesList.push(barberShopRecord);
             }
         } else {
-            console.log('newcustomer Input: ' + JSON.stringify(jsonData, null, 4));
-            const customer = new CustomerClass(jsonData);
-            const customerRecord = customer.toDatabaseRecord();
-            newcustomersList.push(customerRecord);
+            console.log('newbarberShop Input: ' + JSON.stringify(jsonData, null, 4));
+            const barberShop = new BarberShopWorkerServiceClass(jsonData);
+            const barberShopRecord = barberShop.toDatabaseRecord();
+            newbarberShopWorkerServicesList.push(barberShopRecord);
         }
-        console.log('New customers: ' + JSON.stringify(newcustomersList, null, 4));
+        console.log('New barberShops: ' + JSON.stringify(newbarberShopWorkerServicesList, null, 4));
 
         return new Promise(async (resolve, reject) => {
             const response = {
                 success: false,
                 response: []
             }
-            if (newcustomersList.length == 0) { response.error = ['Error: empty list. Nothing to update']; reject(response) };
+            if (newbarberShopWorkerServicesList.length == 0) { response.error = ['Error: empty list. Nothing to update']; reject(response) };
             const pool = this.database.getPool();
             const newList = [];
             // id bigint auto_increment primary key,
@@ -255,21 +225,21 @@ class CustomerService {
             // createdAt timestamp DEFAULT CURRENT_TIMESTAMP ,
             // modifiedAt timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             const keys = [
-                'name', 'phone', 'id'
+                'name', 'city', 'neighborhood', 'street', 'number', 'complement', 'phone', 'geolocationLatitude', 'geolocationLongitude', 'wppId'
             ]
-            for (const customer of newcustomersList) {
-                let customerOrderedValues = [];
+            for (const barberShop of newbarberShopWorkerServicesList) {
+                let barberShopOrderedValues = [];
                 for (const key of keys) {
-                    customerOrderedValues.push(customer[key] || null);
+                    barberShopOrderedValues.push(barberShop[key] || null);
                 }
-                if (customerOrderedValues[customerOrderedValues.length - 1] == null) {
-                    response.error = ['Error to update customer. wppId cannot be null. Record index: ' + newList.length - 1];
+                if (barberShopOrderedValues[barberShopOrderedValues.length - 1] == null) {
+                    response.error = ['Error to update barberShop. wppId cannot be null. Record index: ' + newList.length - 1];
                     reject(response);
                 }
-                newList.push(customerOrderedValues);
+                newList.push(barberShopOrderedValues);
             }
             console.log('Values >  ' + JSON.stringify(newList, null, 4));
-            const updateTable = 'UPDATE customer ';
+            const updateTable = 'UPDATE barberShop ';
             let setStatement = 'SET ';
             for (const key of keys) {
                 if (keys.indexOf(key) == 0) {
@@ -341,7 +311,7 @@ class CustomerService {
             } else {
                 pool.query(
                     query,
-                    ...newList,
+                    ...[newList],
                     function (err, rows, fields) {
                         if (err) {
                             response.error = [];
@@ -360,4 +330,4 @@ class CustomerService {
 
 }
 
-module.exports.CustomerService = new CustomerService();
+module.exports.BarberShopService = new BarberShopService();

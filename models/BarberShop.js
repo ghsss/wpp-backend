@@ -78,6 +78,7 @@ class BarberShop {
             'barberShopId': 'id', 'barberShopName': 'name', 'barberShopPhone': 'phone', 
             'barberShopCity': 'city', 'barberShopNeighborhood': 'neighborhood', 'barberShopStreet': 'street', 
             'barberShopNumber': 'number', 'barberShopComplement': 'complement', 'barberShopWppId': 'wppId', 
+            // 'availableDays': 'availableDays', 'availableHours': 'availableHours',
             'geolocationLatitude': 'geolocationLatitude', 'geolocationLongitude': 'geolocationLongitude'
         }
         const databaseRecord = {};
@@ -85,9 +86,19 @@ class BarberShop {
             if (this.hasOwnProperty(prop) && Object.keys(databaseRecordPropsDict).includes(prop)) {
                 // do stuff
                 databaseRecord[databaseRecordPropsDict[prop]] = this[prop];
+                if ( prop == 'availableDays' || prop == 'availableHours' ) {
+                    if ( typeof this[prop] == 'object' ) {
+                        databaseRecord[databaseRecordPropsDict[prop]] = JSON.parse(this[prop]);
+                    }
+                }
             } else {
                 if (this.hasOwnProperty(prop) && Object.values(databaseRecordPropsDict).includes(prop)) {
                     databaseRecord[databaseRecordPropsDict[prop]] = this[prop];
+                    if ( prop == 'availableDays' || prop == 'availableHours' ) {
+                        if ( typeof this[prop] == 'object' ) {
+                            databaseRecord[databaseRecordPropsDict[prop]] = JSON.parse(this[prop]);
+                        }
+                    }
                 }
             }
         }

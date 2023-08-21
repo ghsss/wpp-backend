@@ -30,7 +30,7 @@ class TextMessage {
 module.exports.TextMessage = TextMessage;
 
 class MediaMessage {
-    
+
     content = new MessageMedia();
 
     constructor(chatId = new String(), content = new MessageMedia()) {
@@ -59,7 +59,7 @@ class WhatsappService {
         authStrategy: new LocalAuth({ clientId: "client-one" })
     });
 
-    messages = new Array<TextMessage>([])
+    messages = new Array < TextMessage > ([])
 
     async #initializeClient() {
         return new Promise((resolve, reject) => {
@@ -73,32 +73,43 @@ class WhatsappService {
                     resolve();
                     console.log('Client is ready!');
                 });
-                this.#client.initialize();   
+                this.#client.initialize();
             } catch (error) {
-                reject('Error initializing client: '+error);
+                reject('Error initializing client: ' + error);
             }
         })
     }
 
     async sendTextMessages(messages) {
-        console.log(messages);
-        for await ( let message of messages ) {
-            const m = await this.#client.sendMessage(message.chatId, message.text);
-            console.log(JSON.stringify(m));
+        const response = {
+            success: false,
+            response: []
         }
+        console.log(messages);
+        for await (let message of messages) {
+            await this.#client.sendMessage(message.chatId, message.text)
+            .then( m => {
+                response.response.push(m);
+                console.log(JSON.stringify(m));
+            })
+            .catch( err => {
+                if ( typeof response.error === 'undefined' || response.error == null ) {
+                    response.error = [err];
+                } else {
+                    response.error.push(err);
+                }
+            });
+        }
+        return response;
     }
 
     async start() {
-        await this.#initializeClient();
         const client = this.#client;
+        await this.#initializeClient();
+        console.log('Client instanciated!');
         try {
             client.on('message', msg => {
-                // if (msg.body == '!ping') {
-                //     msg.reply('pong');
-                // }
-                // callback(msg);
-                // msg.
-                this.processIncomingMessages(msg);
+                // this.processIncomingMessages(msg);
             });
         } catch (error) {
             console.error('Error: ' + error);
@@ -151,7 +162,7 @@ class WhatsappService {
         ];
 
         const wait10Seconds = async () => {
-            setTimeout( () => {
+            setTimeout(() => {
                 console.log('10 seconds waiting finished.');
             }, 10000);
         };
@@ -160,9 +171,9 @@ class WhatsappService {
 
         let clientState = await this.getClientState();
 
-        while ( typeof clientState == 'undefined' || pairingStates.includes(clientState) ) {
+        while (typeof clientState == 'undefined' || pairingStates.includes(clientState)) {
 
-            setTimeout( async () => {
+            setTimeout(async () => {
 
                 clientState = await this.getClientState();
 

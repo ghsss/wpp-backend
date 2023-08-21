@@ -1,8 +1,7 @@
 
-class Customer {
-    #id;
-    #name;
-    #phone;
+class WppAllowedDevice {
+    #wppId;
+    #hash;
 
     constructor ( jsonData ) {
         if ( typeof jsonData == 'string' ) {
@@ -37,7 +36,7 @@ class Customer {
         // #modifiedAt = Date;
         // #createdBy = CreatedBy;
         // #modifiedBy = CreatedBy;
-        // #customer = Customer;
+        // #Barber = Barber;
         // #dayAndTime = Date;
         // #barberShop = Barbershop;
         // #barberShopWorker = Barber;
@@ -50,9 +49,9 @@ class Customer {
         //     "createdAt": "2023-08-13T13:29:21.000Z",
         //     "modifiedAt": "2023-08-13T13:29:21.000Z",
         //     "appointmentStatus": "Agendado",
-        //     "customerId": "555499026453@c.us",
-        //     "customerName": "Gabriel",
-        //     "customerPhone": "555499026453",
+        //     "BarberId": "555499026453@c.us",
+        //     "BarberName": "Gabriel",
+        //     "BarberPhone": "555499026453",
         //     "barberShopId": 1,
         //     "barberShopName": "Barbearia do Gabriel",
         //     "barberShopPhone": "555499026453",
@@ -70,11 +69,10 @@ class Customer {
         //     "workerPhone": "555499026453"
         // }
         const databaseRecordPropsDict = {
-            'customerId': 'id',
+            'wppId': 'wppId',
             // 'createdAt': 'createdAt',
             // 'modifiedAt': 'modifiedAt',
-            'customerName': 'name',
-            'customerPhone': 'phone'
+            'hash': 'hash'
         }
         const databaseRecord = {};
         for ( const prop in this ) {
@@ -96,4 +94,4 @@ class Customer {
 
 }
 
-module.exports.CustomerClass = Customer;
+module.exports.WppAllowedDeviceClass = WppAllowedDevice;

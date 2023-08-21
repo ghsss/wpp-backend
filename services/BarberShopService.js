@@ -1,5 +1,5 @@
 const { BarberShopClass } = require("../models/BarberShop");
-const { BarberShopStatusService } = require("./BarberShopStatusService");
+// const { BarberShopStatusService } = require("./BarberShopStatusService");
 const { DatabaseService } = require("./DatabaseService");
 
 class BarberShopService {
@@ -27,7 +27,7 @@ class BarberShopService {
 
     }
 
-    async getBarberShopbarberShops(barberShopWppId) {
+    async getBarberShopByWppId(barberShopWppId) {
         const pool = this.database.getPool();
         const response = {
             success: false,
@@ -42,6 +42,7 @@ class BarberShopService {
                 c.id AS customerId, c.name AS customerName, c.phone as customerPhone,
                 bs.id as barberShopId, bs.name as barberShopName, bs.phone as barberShopPhone, bs.city as barberShopCity, cy.name as barberShopCityName, 
                 bs.neighborhood as barberShopNeighborhood, bs.street as barberShopStreet, bs.number as barberShopNumber, bs.complement barberShopComplement, 
+                bs.availableDays, bs.availableHours, 
                 bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId,
                 b.id AS workerWppId, b.name AS workerName, b.phone AS workerPhone, bsw.id AS workerId 
                 FROM barberShop AS a 
@@ -96,7 +97,7 @@ class BarberShopService {
 
     }
 
-    getBarberShops(customerId) {
+    getBarberShops() {
         const pool = this.database.getPool();
         const response = {
             success: false,
@@ -108,7 +109,8 @@ class BarberShopService {
             pool.query(
                 `SELECT
                 bs.id as barberShopId, bs.name as barberShopName, bs.phone as barberShopPhone, bs.city as barberShopCity, cy.name as barberShopCityName,
-                bs.neighborhood as barberShopNeighborhood, bs.street as barberShopStreet, bs.number as barberShopNumber, bs.complement barberShopComplement, 
+                bs.neighborhood as barberShopNeighborhood, bs.street as barberShopStreet, bs.number as barberShopNumber, bs.complement barberShopComplement,
+                bs.availableDays, bs.availableHours, 
                 bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId
                 FROM barberShop AS bs
                 JOIN city AS cy ON cy.id = bs.city`,
@@ -179,7 +181,7 @@ class BarberShopService {
             const newList = [];
             // const newList = new Array(BarberShopClass);
             const keys = [
-                'name', 'city', 'neighborhood', 'street', 'number', 'complement', 'phone', 'geolocationLatitude', 'geolocationLongitude', 'wppId'
+                'name', 'city', 'availableDays', 'availableHours', 'neighborhood', 'street', 'number', 'complement', 'phone', 'geolocationLatitude', 'geolocationLongitude', 'wppId'
             ]
             for (const barberShop of newbarberShopsList) {
                 let barberShopOrderedValues = [];
@@ -230,58 +232,46 @@ class BarberShopService {
                 console.error('Error: expected a valid JSON as argument.\n' + error);
             }
         }
-        const newbarberShopsList = [];
+        const newAppointmentsList = [];
         if (Array.isArray(jsonData)) {
-            console.log('newbarberShop Batch Input rows: ' + jsonData.length);
-            console.log('newbarberShop Batch first input: ' + JSON.stringify(jsonData[0], null, 4));
-            for (const barberShopRow of jsonData) {
-                const barberShop = new BarberShopClass(barberShopRow);
-                const barberShopRecord = barberShop.toDatabaseRecord();
-                newbarberShopsList.push(barberShopRecord);
+            console.log('newAppointment Batch Input rows: ' + jsonData.length);
+            console.log('newAppointment Batch first input: ' + JSON.stringify(jsonData[0], null, 4));
+            for (const appointmentRow of jsonData) {
+                const appointment = new BarberShopClass(appointmentRow);
+                const appointmentRecord = appointment.toDatabaseRecord();
+                newAppointmentsList.push(appointmentRecord);
             }
         } else {
-            console.log('newbarberShop Input: ' + JSON.stringify(jsonData, null, 4));
-            const barberShop = new BarberShopClass(jsonData);
-            const barberShopRecord = barberShop.toDatabaseRecord();
-            newbarberShopsList.push(barberShopRecord);
+            console.log('newAppointment Input: ' + JSON.stringify(jsonData, null, 4));
+            const appointment = new BarberShopClass(jsonData);
+            const appointmentRecord = appointment.toDatabaseRecord();
+            newAppointmentsList.push(appointmentRecord);
         }
-        console.log('New barberShops: ' + JSON.stringify(newbarberShopsList, null, 4));
+        console.log('New appointments: ' + JSON.stringify(newAppointmentsList, null, 4));
 
         return new Promise(async (resolve, reject) => {
             const response = {
                 success: false,
                 response: []
             }
-            if (newbarberShopsList.length == 0) { response.error = ['Error: empty list. Nothing to update']; reject(response) };
+            if (newAppointmentsList.length == 0) { response.error = ['Error: empty list. Nothing to update']; reject(response) };
             const pool = this.database.getPool();
             const newList = [];
-            // id bigint auto_increment primary key,
-            // name varchar(150) not null, 
-            // city varchar(5) not null,
-            // neighborhood varchar(100) not null,
-            // street varchar(100) not null,
-            // number varchar(100) not null,
-            // complement varchar(125),
-            // phone varchar(100) unique not null,
-            // wppId varchar(500) unique not null,
-            // #@-28.2905353,-52.7868431
-            // geolocationLatitude Decimal(8,6),
-            // geolocationLongitude Decimal(9,6),
-            // createdAt timestamp DEFAULT CURRENT_TIMESTAMP ,
-            // modifiedAt timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             const keys = [
-                'name', 'city', 'neighborhood', 'street', 'number', 'complement', 'phone', 'geolocationLatitude', 'geolocationLongitude', 'wppId'
+                'name', 'city', 
+                // 'availableDays', 'availableHours', 
+                'neighborhood', 'street', 'number', 'complement', 'phone', 'geolocationLatitude', 'geolocationLongitude', 'wppId'
             ]
-            for (const barberShop of newbarberShopsList) {
-                let barberShopOrderedValues = [];
+            for (const appointment of newAppointmentsList) {
+                let appointmentOrderedValues = [];
                 for (const key of keys) {
-                    barberShopOrderedValues.push(barberShop[key] || null);
+                    appointmentOrderedValues.push(appointment[key] || null);
                 }
-                if (barberShopOrderedValues[barberShopOrderedValues.length - 1] == null) {
-                    response.error = ['Error to update barberShop. wppId cannot be null. Record index: ' + newList.length - 1];
+                if (appointmentOrderedValues[appointmentOrderedValues.length - 1] == null) {
+                    response.error = ['Error to update appointment. Id cannot be null. Record index: ' + newList.length - 1];
                     reject(response);
                 }
-                newList.push(barberShopOrderedValues);
+                newList.push(appointmentOrderedValues);
             }
             console.log('Values >  ' + JSON.stringify(newList, null, 4));
             const updateTable = 'UPDATE barberShop ';
@@ -304,7 +294,7 @@ class BarberShopService {
             if ([...newList].length > 1) {
                 console.log([...newList].length);
                 const promises = [];
-                pool.getConnection(async (err, conn) => {
+                pool.getConnection( async (err, conn) => {
                     if (err) {
                         response.error = []
                         response.error.push(err);
@@ -336,15 +326,15 @@ class BarberShopService {
                         });
                     }
                     for await (const nL of newList) {
-                        await queryPromise(nL).then(res => {
+                        await queryPromise(nL).then( res => {
                             response.response.push(res.response[0]);
                         })
-                            .catch(err => {
-                                if (!Object.keys(response).includes('error')) {
-                                    response.error = [];
-                                }
-                                response.error.push(err);
-                            });
+                        .catch( err => {
+                            if ( !Object.keys(response).includes('error') ) {
+                                response.error = []; 
+                            }
+                            response.error.push(err); 
+                        });
                     }
                     conn.release();
                     if (Object.keys(response).includes('error')) {
@@ -356,7 +346,7 @@ class BarberShopService {
             } else {
                 pool.query(
                     query,
-                    ...[newList],
+                    ...newList,
                     function (err, rows, fields) {
                         if (err) {
                             response.error = [];
@@ -370,7 +360,155 @@ class BarberShopService {
 
                     })
             }
-        })
+        });
+        // if (typeof jsonData == 'string') {
+        //     try {
+        //         jsonData = JSON.parse(jsonData);
+        //     } catch (error) {
+        //         console.error('Error: expected a valid JSON as argument.\n' + error);
+        //     }
+        // }
+        // const newbarberShopsList = [];
+        // if (Array.isArray(jsonData)) {
+        //     console.log('newbarberShop Batch Input rows: ' + jsonData.length);
+        //     console.log('newbarberShop Batch first input: ' + JSON.stringify(jsonData[0], null, 4));
+        //     for (const barberShopRow of jsonData) {
+        //         const barberShop = new BarberShopClass(barberShopRow);
+        //         const barberShopRecord = barberShop.toDatabaseRecord();
+        //         newbarberShopsList.push(barberShopRecord);
+        //     }
+        // } else {
+        //     console.log('newbarberShop Input: ' + JSON.stringify(jsonData, null, 4));
+        //     const barberShop = new BarberShopClass(jsonData);
+        //     const barberShopRecord = barberShop.toDatabaseRecord();
+        //     newbarberShopsList.push(barberShopRecord);
+        // }
+        // console.log('New barberShops: ' + JSON.stringify(newbarberShopsList, null, 4));
+
+        // return new Promise(async (resolve, reject) => {
+        //     const response = {
+        //         success: false,
+        //         response: []
+        //     }
+        //     if (newbarberShopsList.length == 0) { response.error = ['Error: empty list. Nothing to update']; reject(response) };
+        //     const pool = this.database.getPool();
+        //     const newList = [];
+        //     // id bigint auto_increment primary key,
+        //     // name varchar(150) not null, 
+        //     // city varchar(5) not null,
+        //     // neighborhood varchar(100) not null,
+        //     // street varchar(100) not null,
+        //     // number varchar(100) not null,
+        //     // complement varchar(125),
+        //     // phone varchar(100) unique not null,
+        //     // wppId varchar(500) unique not null,
+        //     // #@-28.2905353,-52.7868431
+        //     // geolocationLatitude Decimal(8,6),
+        //     // geolocationLongitude Decimal(9,6),
+        //     // createdAt timestamp DEFAULT CURRENT_TIMESTAMP ,
+        //     // modifiedAt timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        //     const keys = [
+        //         'name', 'city', 'availableDays', 'availableHours', 'neighborhood', 'street', 'number', 'complement', 'phone', 'geolocationLatitude', 'geolocationLongitude', 'wppId'
+        //     ]
+        //     for (const barberShop of newbarberShopsList) {
+        //         let barberShopOrderedValues = [];
+        //         for (const key of keys) {
+        //             barberShopOrderedValues.push(barberShop[key] || null);
+        //         }
+        //         if (barberShopOrderedValues[barberShopOrderedValues.length - 1] == null) {
+        //             response.error = ['Error to update barberShop. wppId cannot be null. Record index: ' + newList.length - 1];
+        //             reject(response);
+        //         }
+        //         newList.push(barberShopOrderedValues);
+        //     }
+        //     console.log('Values >  ' + JSON.stringify(newList, null, 4));
+        //     const updateTable = 'UPDATE barberShop ';
+        //     let setStatement = 'SET ';
+        //     for (const key of keys) {
+        //         if (keys.indexOf(key) == 0) {
+        //             setStatement += key + '=?';
+        //         } else {
+        //             if (keys.indexOf(key) == keys.length - 1) {
+        //                 setStatement += ' WHERE ' + key + '=? ';
+        //             } else {
+        //                 setStatement += ', ' + key + '=?';
+        //             }
+        //         }
+        //     }
+        //     const query = updateTable + setStatement;
+        //     console.log(query);
+        //     console.log(...newList);
+
+        //     if ([...newList].length > 1) {
+        //         console.log([...newList].length);
+        //         const promises = [];
+        //         pool.getConnection(async (err, conn) => {
+        //             if (err) {
+        //                 response.error = []
+        //                 response.error.push(err);
+        //                 reject(response);
+        //             }
+        //             const queryPromise = async (nL) => {
+        //                 // console.log([Object.values(el)]);
+        //                 return new Promise((resolve, reject) => {
+        //                     const res = {
+        //                         response: []
+        //                     };
+        //                     conn.query(
+        //                         query,
+        //                         ...[nL],
+        //                         function (err, rows, fields) {
+        //                             console.log(rows);
+        //                             if (err) {
+        //                                 if (!Object.keys(res).includes('error')) {
+        //                                     res.error = [];
+        //                                 }
+        //                                 res.error.push(err);
+        //                                 reject(res);
+        //                             } else {
+        //                                 res.response.push(rows);
+        //                                 // res.fields = fields;
+        //                                 resolve(res);
+        //                             }
+        //                         })
+        //                 });
+        //             }
+        //             for await (const nL of newList) {
+        //                 await queryPromise(nL).then(res => {
+        //                     response.response.push(res.response[0]);
+        //                 })
+        //                     .catch(err => {
+        //                         if (!Object.keys(response).includes('error')) {
+        //                             response.error = [];
+        //                         }
+        //                         response.error.push(err);
+        //                     });
+        //             }
+        //             conn.release();
+        //             if (Object.keys(response).includes('error')) {
+        //                 reject(response);
+        //             } else {
+        //                 resolve(response);
+        //             }
+        //         });
+        //     } else {
+        //         pool.query(
+        //             query,
+        //             ...[newList],
+        //             function (err, rows, fields) {
+        //                 if (err) {
+        //                     response.error = [];
+        //                     response.error.push(err);
+        //                     reject(response);
+        //                 }
+
+        //                 response.response = rows;
+        //                 response.fields = fields;
+        //                 resolve(response);
+
+        //             })
+        //     }
+        // })
     }
 
 }

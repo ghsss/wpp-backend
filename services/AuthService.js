@@ -1,4 +1,5 @@
 const { AppointmentClass } = require('../models/Appointment');
+const { CryptoUtil } = require('../util/CryptoClass');
 const { AppointmentService } = require('./AppointmentService');
 const { DatabaseService } = require('./DatabaseService');
 const crypto = require('crypto');
@@ -11,7 +12,7 @@ class AuthService {
     }
 
     constructor() {
-        this.cleanInvalidTokens();
+        this.clearInvalidTokens();
     }
 
     async login(wppId, option) {
@@ -114,13 +115,14 @@ class AuthService {
 
     clearInvalidTokens() {
         setInterval( () => {
-            console.log('Cleaning... ');
-            console.log('A: '+JSON.stringify(this.#tokens));
+            // console.log('Cleaning... ');
+            // console.log('A: '+JSON.stringify(this.#tokens));
             // 5 Minutes limit to Wpp code verification
             const timeout = 300000;
             for ( const wppId of Object.keys(this.#tokens) ) {
                 if ( new Date().getTime() > this.#tokens[wppId]['timestamp'] + timeout ) {
                     delete this.#tokens[wppId];
+                    console.log('Deleted token for wppId: '+wppId);
                 }
             }
         }, 1500);
@@ -136,7 +138,8 @@ class AuthService {
                 generateKey('hmac', { length: 256 }, (err, key) => {
                     if (err) throw err;
                     const hexKey = key.export().toString('hex');  // 46e..........620
-                    callback(hexKey);
+                    const hash = CryptoUtil.hash(hexKey);//crypto.createHash('sha512').update(hexKey).digest('hex');
+                    callback(hexKey, hash);
                 });
             // ENCRYPT AND STORE THE ENCRYPTED HEX KEY OF THE VERIFIED USER IN THE DATABASE
             // SEND THE HEX KEY TO THE VERIFIED USER APP STORE IT IN THE LOCAL STORAGE
@@ -155,8 +158,9 @@ class AuthService {
         for (const num of array) {
             n += String(num).substring(0, 2);
         }
+        n = Number(n);
         this.#tokens[wppId] = {};
-        this.#tokens[wppId]['token'] = Number(n);
+        this.#tokens[wppId]['token'] = n;
         this.#tokens[wppId]['timestamp'] = new Date().getTime();
         return n;
     }
