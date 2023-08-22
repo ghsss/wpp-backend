@@ -62,7 +62,8 @@ class WhatsappService {
     messages = new Array < TextMessage > ([])
 
     async #initializeClient() {
-        return new Promise((resolve, reject) => {
+        console.log('Initializing client...');
+        return new Promise( async (resolve, reject) => {
             try {
                 this.#client.on('qr', (qr) => {
                     // Generate and scan this code with your phone
@@ -73,7 +74,11 @@ class WhatsappService {
                     resolve();
                     console.log('Client is ready!');
                 });
-                this.#client.initialize();
+                this.#client.on('state_change', (state) => {
+                    // resolve();
+                    console.log('Client state changed: '+state);
+                });
+                await this.#client.initialize();
             } catch (error) {
                 reject('Error initializing client: ' + error);
             }
@@ -87,16 +92,17 @@ class WhatsappService {
         }
         console.log(messages);
         for await (let message of messages) {
-            await this.#client.sendMessage(message.chatId, message.text)
+            await this.#client.sendMessage(message.chatId, String(message.text))
             .then( m => {
                 response.response.push(m);
                 console.log(JSON.stringify(m));
             })
             .catch( err => {
-                if ( typeof response.error === 'undefined' || response.error == null ) {
-                    response.error = [err];
+                console.log(err);
+                if ( !Object.keys(response).includes('error') ) {
+                    response.error = [err.toString()];
                 } else {
-                    response.error.push(err);
+                    response.error.push(err.toString());
                 }
             });
         }

@@ -3,7 +3,7 @@
 //     'availableDays': 'availableDays', 'availableHours': 'availableHours', 'barberShopId': 'barberShop',
 //     'workerId': 'barberShopWorker'
 // }
-const { BarberShopWorkerServiceClass } = require("../models/BarberShopWorkerServiceClass");
+const { BarberShopWorkerServiceClass } = require("../models/BarberShopWorkerService");
 // const { BarberShopStatusService } = require("./BarberShopStatusService");
 const { DatabaseService } = require("./DatabaseService");
 
@@ -41,9 +41,10 @@ class BarberShopWorkerServiceService {
         const newList = [];
         // const newList = Array();
         return new Promise((resolve, reject) => {
+
             pool.query(
                 `SELECT 
-                *,
+                a.id, a.name, a.description, a.durationInMinutes, a.availableDays, a.availableHours,
                 bs.id as barberShopId, bs.name as barberShopName, bs.phone as barberShopPhone, bs.city as barberShopCity, cy.name as barberShopCityName, 
                 bs.neighborhood as barberShopNeighborhood, bs.street as barberShopStreet, bs.number as barberShopNumber, bs.complement barberShopComplement, 
                 bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId,
@@ -110,20 +111,20 @@ class BarberShopWorkerServiceService {
         const newbarberShopWorkerServicesList = [];
         // const newbarberShopWorkerServicesList = new Array(BarberShopWorkerServiceClass);
         if (Array.isArray(jsonData)) {
-            console.log('newbarberShop Batch Input rows: ' + jsonData.length);
-            console.log('newbarberShop Batch first input: ' + JSON.stringify(jsonData[0], null, 4));
+            console.log('barberShopWorkerService Batch Input rows: ' + jsonData.length);
+            console.log('barberShopWorkerService Batch first input: ' + JSON.stringify(jsonData[0], null, 4));
             for (const barberShopRow of jsonData) {
                 const barberShop = new BarberShopWorkerServiceClass(barberShopRow);
                 const barberShopRecord = barberShop.toDatabaseRecord();
                 newbarberShopWorkerServicesList.push(barberShopRecord);
             }
         } else {
-            console.log('newbarberShop Input: ' + JSON.stringify(jsonData, null, 4));
+            console.log('barberShopWorkerService Input: ' + JSON.stringify(jsonData, null, 4));
             const barberShop = new BarberShopWorkerServiceClass(jsonData);
             const barberShopRecord = barberShop.toDatabaseRecord();
             newbarberShopWorkerServicesList.push(barberShopRecord);
         }
-        console.log('New barberShops: ' + JSON.stringify(newbarberShopWorkerServicesList, null, 4));
+        console.log('New barberShopWorkerService: ' + JSON.stringify(newbarberShopWorkerServicesList, null, 4));
         return new Promise((resolve, reject) => {
             const response = {
                 success: false,
@@ -132,9 +133,16 @@ class BarberShopWorkerServiceService {
             if (newbarberShopWorkerServicesList.length == 0) { response.error = ['Error: empty list. Nothing to insert']; reject(response) };
             const pool = this.database.getPool();
             const newList = [];
-            // const newList = new Array(BarberShopWorkerServiceClass);
+            // id bigint auto_increment primary key,
+            // name varchar(250) not null,
+            // description varchar(500),
+            // durationInMinutes int not null,
+            // availableDays varchar(500) not null, # [0,1,2,3,4,5,6]
+            // availableHours varchar(1000) not null, # [{"0":["7:30 12:00","13:30 18:00"]}]
+            // barberShop bigint not null,
+            // barberShopWorker bigint not null,
             const keys = [
-                'name', 'city', 'neighborhood', 'street', 'number', 'complement', 'phone', 'geolocationLatitude', 'geolocationLongitude', 'wppId'
+                'name', 'description', 'durationInMinutes', 'availableDays', 'availableHours', 'barberShop', 'barberShopWorker'
             ]
             for (const barberShop of newbarberShopWorkerServicesList) {
                 let barberShopOrderedValues = [];
@@ -144,7 +152,7 @@ class BarberShopWorkerServiceService {
                 newList.push(barberShopOrderedValues);
             }
             console.log('Values >  ' + JSON.stringify(newList, null, 4));
-            const insertTable = 'INSERT INTO barberShop(';
+            const insertTable = 'INSERT INTO barberShopWorkerService(';
             let setStatement = '';
             for (const key of keys) {
                 if (keys.indexOf(key) == 0) {
@@ -187,20 +195,20 @@ class BarberShopWorkerServiceService {
         }
         const newbarberShopWorkerServicesList = [];
         if (Array.isArray(jsonData)) {
-            console.log('newbarberShop Batch Input rows: ' + jsonData.length);
-            console.log('newbarberShop Batch first input: ' + JSON.stringify(jsonData[0], null, 4));
+            console.log('barberShopWorkerService Batch Input rows: ' + jsonData.length);
+            console.log('barberShopWorkerService Batch first input: ' + JSON.stringify(jsonData[0], null, 4));
             for (const barberShopRow of jsonData) {
                 const barberShop = new BarberShopWorkerServiceClass(barberShopRow);
                 const barberShopRecord = barberShop.toDatabaseRecord();
                 newbarberShopWorkerServicesList.push(barberShopRecord);
             }
         } else {
-            console.log('newbarberShop Input: ' + JSON.stringify(jsonData, null, 4));
+            console.log('barberShopWorkerService Input: ' + JSON.stringify(jsonData, null, 4));
             const barberShop = new BarberShopWorkerServiceClass(jsonData);
             const barberShopRecord = barberShop.toDatabaseRecord();
             newbarberShopWorkerServicesList.push(barberShopRecord);
         }
-        console.log('New barberShops: ' + JSON.stringify(newbarberShopWorkerServicesList, null, 4));
+        console.log('New barberShopWorkerService: ' + JSON.stringify(newbarberShopWorkerServicesList, null, 4));
 
         return new Promise(async (resolve, reject) => {
             const response = {
@@ -225,7 +233,7 @@ class BarberShopWorkerServiceService {
             // createdAt timestamp DEFAULT CURRENT_TIMESTAMP ,
             // modifiedAt timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             const keys = [
-                'name', 'city', 'neighborhood', 'street', 'number', 'complement', 'phone', 'geolocationLatitude', 'geolocationLongitude', 'wppId'
+                'name', 'description', 'durationInMinutes', 'availableDays', 'availableHours', 'barberShop', 'barberShopWorker', 'id'
             ]
             for (const barberShop of newbarberShopWorkerServicesList) {
                 let barberShopOrderedValues = [];
@@ -233,13 +241,13 @@ class BarberShopWorkerServiceService {
                     barberShopOrderedValues.push(barberShop[key] || null);
                 }
                 if (barberShopOrderedValues[barberShopOrderedValues.length - 1] == null) {
-                    response.error = ['Error to update barberShop. wppId cannot be null. Record index: ' + newList.length - 1];
+                    response.error = ['Error to update barberShopWorkerService. wppId cannot be null. Record index: ' + newList.length - 1];
                     reject(response);
                 }
                 newList.push(barberShopOrderedValues);
             }
             console.log('Values >  ' + JSON.stringify(newList, null, 4));
-            const updateTable = 'UPDATE barberShop ';
+            const updateTable = 'UPDATE barberShopWorkerService ';
             let setStatement = 'SET ';
             for (const key of keys) {
                 if (keys.indexOf(key) == 0) {
@@ -330,4 +338,4 @@ class BarberShopWorkerServiceService {
 
 }
 
-module.exports.BarberShopService = new BarberShopService();
+module.exports.BarberShopWorkerServiceService = new BarberShopWorkerServiceService();

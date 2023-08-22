@@ -15,6 +15,32 @@ class AuthService {
         this.clearInvalidTokens();
     }
 
+    async verifyStoredToken(token) {
+        console.log('Verifying stored token...');
+        const pool = this.#database.getPool();
+        const encryptedToken = CryptoUtil.hash(token);
+        return new Promise( (resolve, reject) => {
+            const response = {
+                success: false,
+                response: []
+            }
+            pool.query(`SELECT * FROM wppAllowedDevice WHERE hash=?`, [encryptedToken], async function (err, rows, fields) {
+                if (err) {
+                    console.log(err);
+                    response.error = err;
+                    reject(response);
+                }
+                if ( Array.isArray(rows) && rows.length > 0 ) {
+                    response.response = rows;
+                    response.success = true;
+                }
+                console.log(JSON.stringify(response));
+                resolve(response);
+            });
+
+        });
+    }
+
     async login(wppId, option) {
         const defaultOpts = {
             'tableName': 'customer',
@@ -114,15 +140,15 @@ class AuthService {
     }
 
     clearInvalidTokens() {
-        setInterval( () => {
+        setInterval(() => {
             // console.log('Cleaning... ');
             // console.log('A: '+JSON.stringify(this.#tokens));
             // 5 Minutes limit to Wpp code verification
             const timeout = 300000;
-            for ( const wppId of Object.keys(this.#tokens) ) {
-                if ( new Date().getTime() > this.#tokens[wppId]['timestamp'] + timeout ) {
+            for (const wppId of Object.keys(this.#tokens)) {
+                if (new Date().getTime() > this.#tokens[wppId]['timestamp'] + timeout) {
                     delete this.#tokens[wppId];
-                    console.log('Deleted token for wppId: '+wppId);
+                    console.log('Deleted token for wppId: ' + wppId);
                 }
             }
         }, 1500);
@@ -146,6 +172,7 @@ class AuthService {
             return true;
         } else {
             console.log(JSON.stringify(this.#tokens));
+            callback('Invalid token');
             return false;
         }
     }

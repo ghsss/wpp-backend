@@ -41,19 +41,12 @@ app.get('/', async (req, res) => {
 });
 
 async function main() {
-    await WhatsappService.start()
-        .catch(err => {
-            console.error(err);
-        })
+    // await WhatsappService.start()
+    //     .catch(err => {
+    //         console.error(err);
+    //     })
     app.listen(3000, async () => {
         console.log('Server listening in localhost:3000');
-        // const auth = await AuthService.login('555499026453@c.us', 'BARBERSHOP');
-        // console.log(JSON.stringify(auth, null, 4));
-        // const tok = AuthService.generateToken('555499026453@c.us');
-        // console.log(tok);
-        // AuthService.verifyToken('555499026453@c.us', tok, hex => {
-        //     console.log(hex);
-        // });
     });
 }
 

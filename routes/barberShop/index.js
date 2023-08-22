@@ -3,9 +3,11 @@ const { BarberShopService } = require('../../services/BarberShopService');
 const router = require('express').Router();
 const express = require('express');
 const { BarberShopAppointmentRouter } = require('./appointment');
+const { BarberShopWorkerServiceRouter } = require('./service');
 
 router.use(express.json());
 router.use(BarberShopAppointmentRouter);
+router.use(BarberShopWorkerServiceRouter);
 
 router.get('/barberShops', async (req, res) => {
 

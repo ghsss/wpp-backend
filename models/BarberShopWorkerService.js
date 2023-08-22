@@ -66,25 +66,19 @@ class BarberShopWorkerService {
             'workerId': 'barberShopWorker'
         }
         const databaseRecord = {};
-        for (const prop in this) {
-            if (this.hasOwnProperty(prop) && Object.keys(databaseRecordPropsDict).includes(prop)) {
+        for ( const prop in this ) {
+            if (this.hasOwnProperty(prop) && Object.keys(databaseRecordPropsDict).includes(prop) ) {
+                // do stuff
+                console.log(databaseRecordPropsDict[prop]);
                 databaseRecord[databaseRecordPropsDict[prop]] = this[prop];
-                if ( prop == 'availableDays' || prop == 'availableHours' ) {
-                    if ( typeof this[prop] == 'object' ) {
-                        databaseRecord[databaseRecordPropsDict[prop]] = JSON.stringify(this[prop]);
-                    }
-                }
             } else {
                 if (this.hasOwnProperty(prop) && Object.values(databaseRecordPropsDict).includes(prop)) {
-                    databaseRecord[databaseRecordPropsDict[prop]] = this[prop];
-                    if ( prop == 'availableDays' || prop == 'availableHours' ) {
-                        if ( typeof this[prop] == 'object' ) {
-                            databaseRecord[databaseRecordPropsDict[prop]] = JSON.stringify(this[prop]);
-                        }
-                    }
+                    // console.log(databaseRecordPropsDict[prop]);
+                    databaseRecord[prop] = this[prop];
                 }
             }
         }
+        console.log(databaseRecord);
         return databaseRecord;
     }
 
