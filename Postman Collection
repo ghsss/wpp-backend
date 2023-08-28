@@ -52,31 +52,6 @@
 			"name": "appointment",
 			"item": [
 				{
-					"name": "BarberShop Appointments",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "wppId",
-								"value": "555499026453@c.us",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "localhost:3000/barberShop/appointments",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"barberShop",
-								"appointments"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "NEW Appointments",
 					"request": {
 						"method": "POST",
@@ -388,6 +363,9 @@
 					"item": [
 						{
 							"name": "Services",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
 							"request": {
 								"method": "GET",
 								"header": [
@@ -395,8 +373,22 @@
 										"key": "wppId",
 										"value": "555499026453@c.us",
 										"type": "text"
+									},
+									{
+										"key": "token",
+										"value": "{{token}}",
+										"type": "text"
 									}
 								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "localhost:3000/barberShop/services",
 									"host": [
@@ -415,10 +407,16 @@
 							"name": "NEW Services",
 							"request": {
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "token",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Corte de cabelo\",\r\n    \"description\": null,\r\n    \"durationInMinutes\": 30,\r\n    \"availableDays\": \"[1,2,3,4,5]\",\r\n    \"availableHours\": \"[{\\\"1\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"2\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"],{\\\"3\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"4\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"5\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}]}]\",\r\n    \"barberShop\": 1,\r\n    \"barberShopWorker\": 1\r\n}",
+									"raw": "{\r\n    \"name\": \"Corte de cabeloberro\",\r\n    \"description\": null,\r\n    \"durationInMinutes\": 30,\r\n    \"availableDays\": \"[1,2,3,4,5]\",\r\n    \"availableHours\": \"[{\\\"1\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"2\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"],{\\\"3\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"4\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"5\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}]}]\",\r\n    \"barberShop\": 1,\r\n    \"barberShopWorker\": 1\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -452,7 +450,8 @@
 									{
 										"key": "wppId",
 										"value": "555499026453@c.us",
-										"type": "text"
+										"type": "text",
+										"disabled": true
 									},
 									{
 										"key": "token",
@@ -478,13 +477,147 @@
 				},
 				{
 					"name": "workers",
-					"item": []
+					"item": [
+						{
+							"name": "appointments",
+							"item": []
+						},
+						{
+							"name": "NEW BarberShopWorker",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"barberShop\": 1,\r\n        \"worker\": \"555499026453@c.us\"\r\n    }\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3000/barberShopWorker",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"barberShopWorker"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UPDATE BarberShopWorker",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"id\": 1,\r\n        \"barberShop\": 1,\r\n        \"worker\": \"555499026453@c.us\"\r\n    }\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3000/barberShopWorker",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"barberShopWorker"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE BarberShopWorker",
+							"request": {
+								"method": "DELETE",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "GET BarberShopWorker",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:3000/barberShopWorkers",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"barberShopWorkers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET BarberShopWorker By WppId",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:3000/barberShopWorker/5",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"barberShopWorker",
+										"5"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				},
 				{
-					"name": "NEW Customer Copy",
+					"name": "NEW BarberShop",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "[\r\n    {\r\n        \"barberShopId\": 1,\r\n        \"barberShopName\": \"Barbearia do Gabriel\",\r\n        \"barberShopPhone\": \"555499026450\",\r\n        \"barberShopCity\": \"CZO\",\r\n        \"barberShopCityName\": \"Carazinho\",\r\n        \"barberShopNeighborhood\": \"Centro\",\r\n        \"barberShopStreet\": \"Alexandre da Motta\",\r\n        \"barberShopNumber\": \"1264\",\r\n        \"barberShopComplement\": null,\r\n        \"availableDays\": \"[1,2,3,4,5]\",\r\n        \"availableHours\": \"[{\\\"1\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"2\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"],{\\\"3\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"4\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"5\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}]}]\",\r\n        \"geolocationLatitude\": \"-28.290535\",\r\n        \"geolocationLongitude\": \"-52.786843\",\r\n        \"barberShopWppId\": \"555499026450@c.us\"\r\n    }\r\n]",
@@ -508,7 +641,7 @@
 					"response": []
 				},
 				{
-					"name": "UPDATE Customer Copy",
+					"name": "UPDATE BarberShop",
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -535,7 +668,7 @@
 					"response": []
 				},
 				{
-					"name": "DELETE Customer Copy",
+					"name": "DELETE BarberShop",
 					"request": {
 						"method": "DELETE",
 						"header": []
@@ -546,15 +679,22 @@
 					"name": "GET BarberShops",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "localhost:3000/barberShops",
+							"raw": "localhost:3000/barberShops/1",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
-								"barberShops"
+								"barberShops",
+								"1"
 							]
 						}
 					},
