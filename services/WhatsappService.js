@@ -96,7 +96,6 @@ class WhatsappService {
                 });
                 this.#client.on('message', (message) => {
                     console.log('Client received message: '+message.body);
-                    resolve();
                 });
                 this.#client.on('ready', () => {
                     console.log('Client is ready!');
