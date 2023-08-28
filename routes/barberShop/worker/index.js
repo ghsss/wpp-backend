@@ -3,8 +3,10 @@ const { BarberShopWorkerService } = require('../../../services/BarberShopWorkerS
 const router = require('express').Router();
 const express = require('express');
 const { isAuthorized } = require('../../auth');
+const { BarberShopWorkerAppointmentRouter } = require('./appointment/index.js');
 
 router.use(express.json());
+router.use(BarberShopWorkerAppointmentRouter);
 
 router.get('/barberShopWorkers', isAuthorized, async (req, res) => {
 

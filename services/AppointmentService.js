@@ -163,6 +163,73 @@ class AppointmentService {
 
     }
 
+    getBarberShopWorkerAppointments(workerId, barberShop) {
+        const pool = this.database.getPool();
+        const response = {
+            success: false,
+            response: []
+        }
+        const newList = [];
+        // const newList = new Array(AppointmentClass);
+        return new Promise((resolve, reject) => {
+            pool.query(
+                `SELECT 
+                a.id, a.dayAndTime, a.createdBy, a.modifiedBy, a.createdAt, a.modifiedAt, a.appointmentStatus,
+                c.id AS customerId, c.name AS customerName, c.phone as customerPhone,
+                bs.id as barberShopId, bs.name as barberShopName, bs.phone as barberShopPhone, bs.city as barberShopCity, cy.name as barberShopCityName, 
+                bs.neighborhood as barberShopNeighborhood, bs.street as barberShopStreet, bs.number as barberShopNumber, bs.complement barberShopComplement, 
+                bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId,
+                b.id AS workerWppId, b.name AS workerName, b.phone AS workerPhone, bsw.id AS workerId 
+                FROM appointment AS a 
+                JOIN barberShop AS bs ON a.barberShop = bs.id 
+                JOIN barberShopWorker AS bsw ON a.barberShopWorker = bsw.id 
+                JOIN barber AS b ON b.id = bsw.worker
+                JOIN customer AS c ON c.id = a.customer
+                JOIN city AS cy ON cy.id = bs.city 
+                WHERE b.id = ? AND bs.id = ?`,
+                [workerId, barberShop],
+                function (err, rows, fields) {
+                    if (err) reject(err);
+                    // {
+                    //     "id": 3,
+                    //     "dayAndTime": "2023-08-08T04:46:46.000Z",
+                    //     "createdBy": null,
+                    //     "modifiedBy": null,
+                    //     "createdAt": "2023-08-08T04:46:46.000Z",
+                    //     "modifiedAt": "2023-08-08T04:46:46.000Z",
+                    //     "customerId": "555499026453@c.us",
+                    //     "customerName": "Gabriel",
+                    //     "customerPhone": "555499026453",
+                    //     "barberShopId": 1,
+                    //     "barberShopName": "Barbearia do Gabriel",
+                    //     "barberShopPhone": "",
+                    //     "barberShopCity": "CZO",
+                    //     "barberShopCityName": "Carazinho",
+                    //     "barberShopNeighborhood": "Centro",
+                    //     "barberShopStreet": "Alexandre da Motta",
+                    //     "barberShopNumber": "1264",
+                    //     "barberShopComplement": null,
+                    //     "geolocationLatitude": "-28",
+                    //     "geolocationLongitude": "-53",
+                    //     "barberShopWppId": "",
+                    //     "workerId": "555499026453@c.us",
+                    //     "workerName": "Gabriel",
+                    //     "workerPhone": "555499026453"
+                    // }
+                    // Connection is automatically released when query resolves
+                    if (Array.isArray(rows)) {
+                        console.log('Fist row ' + JSON.stringify(rows[0], null, 4));
+                        for (const row of rows) {
+                            let appointmentStatus = new AppointmentClass(row);
+                            newList.push(appointmentStatus);
+                        }
+                    }
+                    resolve(newList);
+                });
+        });
+
+    }
+
     newAppointments(jsonData) {
         if (typeof jsonData == 'string') {
             try {
