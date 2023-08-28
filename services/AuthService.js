@@ -24,7 +24,7 @@ class AuthService {
                 success: false,
                 response: []
             }
-            pool.query(`SELECT * FROM wppAllowedDevice WHERE hash=?`, [encryptedToken], async function (err, rows, fields) {
+            pool.query(`SELECT wppId FROM wppAllowedDevice WHERE hash=?`, [encryptedToken], async function (err, rows, fields) {
                 if (err) {
                     console.log(err);
                     response.error = err;

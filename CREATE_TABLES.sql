@@ -97,7 +97,7 @@ CREATE TABLE barberShopWorker (
 	id bigint unique auto_increment,
 	barberShop bigint not null,
     worker varchar(500) not null, 
-    PRIMARY KEY (id, barberShop, worker),
+    PRIMARY KEY (barberShop, worker),
 	FOREIGN KEY (barberShop) REFERENCES barberShop(id),
     FOREIGN KEY (worker) REFERENCES barber(id)
 );

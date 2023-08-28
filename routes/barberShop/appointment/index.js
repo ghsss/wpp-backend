@@ -8,10 +8,14 @@ router.use(express.json());
 router.get('/barberShop/appointments', isAuthorized, async (req, res) => {
 
     try {
-        await AppointmentService.getBarberShopAppointments(req.header('wppId'))
-        .then( customerAppointments =>  {
+        const authorizedUser = req.authorizedUser;
+        console.log(authorizedUser);
+        const wppId = authorizedUser.response[0]['wppId'];
+        console.log(wppId);
+        await AppointmentService.getBarberShopAppointments(wppId)
+        .then( barberShopAppointments =>  {
             res.statusCode = 200;
-            res.send(customerAppointments);
+            res.send(barberShopAppointments);
         })
         .catch( err => {
             res.statusCode = 400;

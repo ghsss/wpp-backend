@@ -23,6 +23,7 @@ module.exports.isAuthorized = async (req, res, next) => {
                     throw err;
                 });
             if (response.success) {
+                req.authorizedUser = response;
                 next();
                 // await AuthService.login(req.header('wppId'), req.header('userType'))
                 // .then( logged =>  {

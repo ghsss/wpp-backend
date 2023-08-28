@@ -41,13 +41,15 @@ app.get('/', async (req, res) => {
 });
 
 async function main() {
-    // await WhatsappService.start()
-    //     .catch(err => {
-    //         console.error(err);
-    //     })
-    app.listen(3000, async () => {
-        console.log('Server listening in localhost:3000');
-    });
+    await WhatsappService.start()
+        .then(() => {
+            app.listen(3000, async () => {
+                console.log('Server listening in localhost:3000');
+            });
+        })
+        .catch(err => {
+            console.error(err);
+        })
 }
 
 main();

@@ -2,17 +2,22 @@ const router = require('express').Router();
 const express = require('express');
 const { CustomerService } = require('../../services/CustomerService');
 const { CustomerAppointmentRouter } = require('./appointment');
+const { isAuthorized } = require('../auth');
 
 router.use(express.json());
 router.use(CustomerAppointmentRouter);
 
-router.get('/customers', async (req, res) => {
+router.get('/customers', isAuthorized, async (req, res) => {
 
     try {
-        await CustomerService.getCustomers(req.header('wppId'))
-        .then( customerAppointments =>  {
+        const authorizedUser = req.authorizedUser;
+        console.log(authorizedUser);
+        const wppId = authorizedUser.response[0]['wppId'];
+        console.log(wppId);
+        await CustomerService.getCustomers(wppId)
+        .then( customers =>  {
             res.statusCode = 200;
-            res.send(customerAppointments);
+            res.send(customers);
         })
         .catch( err => {
             res.statusCode = 400;
@@ -25,13 +30,17 @@ router.get('/customers', async (req, res) => {
 
 });
 
-router.get('/customers', async (req, res) => {
+router.get('/customers', isAuthorized, async (req, res) => {
 
     try {
-        await CustomerService.getCustomers(req.header('wppId'))
-        .then( customerAppointments =>  {
+        const authorizedUser = req.authorizedUser;
+        console.log(authorizedUser);
+        const wppId = authorizedUser.response[0]['wppId'];
+        console.log(wppId);
+        await CustomerService.getCustomers(wppId)
+        .then( customers =>  {
             res.statusCode = 200;
-            res.send(customerAppointments);
+            res.send(customers);
         })
         .catch( err => {
             res.statusCode = 400;
@@ -44,14 +53,14 @@ router.get('/customers', async (req, res) => {
 
 });
 
-router.post('/customers', async (req, res) => {
+router.post('/customers', isAuthorized, async (req, res) => {
 
     try {
         const body = req.body;
         await CustomerService.newCustomers(req.body)
-        .then( customerAppointments =>  {
+        .then( customers =>  {
             res.statusCode = 200;
-            res.send(customerAppointments);
+            res.send(customers);
         })
         .catch( err => {
             res.statusCode = 400;
@@ -68,9 +77,9 @@ router.put('/customers', async (req, res) => {
 
     try {
         await CustomerService.updateCustomers(req.body)
-        .then( customerAppointments =>  {
+        .then( customers =>  {
             res.statusCode = 200;
-            res.send(customerAppointments);
+            res.send(customers);
         })
         .catch( err => {
             res.statusCode = 400;

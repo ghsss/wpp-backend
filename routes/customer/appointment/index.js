@@ -1,13 +1,18 @@
 const router = require('express').Router();
 const express = require('express');
 const { AppointmentService } = require('../../../services/AppointmentService');
+const { isAuthorized } = require('../../auth');
 
 router.use(express.json());
 
-router.get('/customer/appointments', async (req, res) => {
+router.get('/customer/appointments', isAuthorized, async (req, res) => {
 
     try {
-        await AppointmentService.getCustomerAppointments(req.header('wppId'))
+        const authorizedUser = req.authorizedUser;
+        console.log(authorizedUser);
+        const wppId = authorizedUser.response[0]['wppId'];
+        console.log(wppId);
+        await AppointmentService.getCustomerAppointments(wppId)
         .then( customerAppointments =>  {
             res.statusCode = 200;
             res.send(customerAppointments);

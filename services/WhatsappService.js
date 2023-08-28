@@ -1,6 +1,7 @@
 const qrcode = require('qrcode-terminal');
-const { Client, MessageTypes, MessageMedia, Message, LocalAuth } = require('whatsapp-web.js');
+const { Client, MessageTypes, MessageMedia, Message, LocalAuth, LegacySessionAuth } = require('whatsapp-web.js');
 const { AppointmentService } = require('./AppointmentService');
+const { NoAuth } = require('whatsapp-web.js');
 // const { AppointmentService } = require('./AppointmentService');
 
 
@@ -56,8 +57,14 @@ module.exports.MediaMessage = MediaMessage
 class WhatsappService {
 
     #client = new Client({
-        authStrategy: new LocalAuth({ clientId: "client-one" })
+        authStrategy: new LocalAuth({ clientId: "barbershop", headless: false })
+        // authStrategy: new NoAuth()
     });
+    // #client = new Client({
+    //     authStrategy: new LegacySessionAuth({
+    //         session: {} // saved session object
+    //     })
+    // });
 
     messages = new Array < TextMessage > ([])
 
@@ -70,13 +77,30 @@ class WhatsappService {
                     console.log('QR RECEIVED', qr);
                     qrcode.generate(qr, { small: true });
                 });
-                this.#client.on('ready', () => {
-                    resolve();
-                    console.log('Client is ready!');
-                });
-                this.#client.on('state_change', (state) => {
-                    // resolve();
+                this.#client.on('change_state', (state) => {
                     console.log('Client state changed: '+state);
+                });
+                this.#client.on('auth_failure', (message) => {
+                    console.log('Client auth_failure: '+message);
+                    // resolve();
+                });
+                this.#client.on('loading_screen', (percentage, message) => {
+                    console.log('Client is loading '+percentage+'%... '+message.toString());
+                    // resolve();
+                });
+                this.#client.on('disconnected', (reason) => {
+                    const msg = 'Client disconnected message: '+reason;
+                    console.log(msg);
+                    throw msg;
+                    // reject();
+                });
+                this.#client.on('message', (message) => {
+                    console.log('Client received message: '+message.body);
+                    resolve();
+                });
+                this.#client.on('ready', () => {
+                    console.log('Client is ready!');
+                    resolve();
                 });
                 await this.#client.initialize();
             } catch (error) {

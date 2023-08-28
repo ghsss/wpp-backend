@@ -4,18 +4,21 @@ const router = require('express').Router();
 const express = require('express');
 const { BarberShopAppointmentRouter } = require('./appointment');
 const { BarberShopWorkerServiceRouter } = require('./service');
+const { isAuthorized } = require('../auth');
+const { BarberShopWorkerRouter } = require('./worker');
 
 router.use(express.json());
 router.use(BarberShopAppointmentRouter);
+router.use(BarberShopWorkerRouter);
 router.use(BarberShopWorkerServiceRouter);
 
-router.get('/barberShops', async (req, res) => {
+router.get('/barberShops', isAuthorized, async (req, res) => {
 
     try {
         await BarberShopService.getBarberShops()
-        .then( customerAppointments =>  {
+        .then( barberShops =>  {
             res.statusCode = 200;
-            res.send(customerAppointments);
+            res.send(barberShops);
         })
         .catch( err => {
             res.statusCode = 400;
@@ -28,14 +31,18 @@ router.get('/barberShops', async (req, res) => {
 
 });
 
-router.get('/barberShop/:wppId', async (req, res) => {
+router.get('/barberShop/:wppId', isAuthorized, async (req, res) => {
 
     try {
-        await BarberShopService.getBarberShopByWppId(req.url.wppId)
+        const authorizedUser = req.authorizedUser;
+        console.log(authorizedUser);
+        const wppId = authorizedUser.response[0]['wppId'];
+        console.log(wppId);
+        await BarberShopService.getBarberShopByWppId(wppId)
         // await BarberShopService.getBarberShops()
-        .then( customerAppointments =>  {
+        .then( barberShop =>  {
             res.statusCode = 200;
-            res.send(customerAppointments);
+            res.send(barberShop);
         })
         .catch( err => {
             res.statusCode = 400;
@@ -48,33 +55,33 @@ router.get('/barberShop/:wppId', async (req, res) => {
 
 });
 
-router.get('/barberShop/appointments', async (req, res) => {
+// router.get('/barberShop/appointments', isAuthorized, async (req, res) => {
 
-    try {
-        await BarberShopService.getBarberShopAppointments(req.header('wppId'))
-        .then( customerAppointments =>  {
-            res.statusCode = 200;
-            res.send(customerAppointments);
-        })
-        .catch( err => {
-            res.statusCode = 400;
-            res.send(err);
-        });
-    } catch (error) {
-        res.statusCode = 500;
-        res.send(error);
-    }
+//     try {
+//         await BarberShopService.getBarberShopAppointments(req.header('wppId'))
+//         .then( barberShopAppoitments =>  {
+//             res.statusCode = 200;
+//             res.send(barberShopAppoitments);
+//         })
+//         .catch( err => {
+//             res.statusCode = 400;
+//             res.send(err);
+//         });
+//     } catch (error) {
+//         res.statusCode = 500;
+//         res.send(error);
+//     }
 
-});
+// });
 
-router.post('/barberShop', async (req, res) => {
+router.post('/barberShop', isAuthorized, async (req, res) => {
 
     try {
         const body = req.body;
         await BarberShopService.newBarberShops(req.body)
-        .then( customerAppointments =>  {
+        .then( barberShops =>  {
             res.statusCode = 200;
-            res.send(customerAppointments);
+            res.send(barberShops);
         })
         .catch( err => {
             res.statusCode = 400;
@@ -87,13 +94,13 @@ router.post('/barberShop', async (req, res) => {
 
 });
 
-router.put('/barberShop', async (req, res) => {
+router.put('/barberShop', isAuthorized, async (req, res) => {
 
     try {
         await BarberShopService.updateBarberShops(req.body)
-        .then( customerAppointments =>  {
+        .then( barberShops =>  {
             res.statusCode = 200;
-            res.send(customerAppointments);
+            res.send(barberShops);
         })
         .catch( err => {
             res.statusCode = 400;

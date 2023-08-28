@@ -38,21 +38,17 @@ class BarberShopService {
         return new Promise((resolve, reject) => {
             pool.query(
                 `SELECT 
-                a.id, a.dayAndTime, a.createdBy, a.modifiedBy, a.createdAt, a.modifiedAt, a.barberShopStatus,
-                c.id AS customerId, c.name AS customerName, c.phone as customerPhone,
                 bs.id as barberShopId, bs.name as barberShopName, bs.phone as barberShopPhone, bs.city as barberShopCity, cy.name as barberShopCityName, 
                 bs.neighborhood as barberShopNeighborhood, bs.street as barberShopStreet, bs.number as barberShopNumber, bs.complement barberShopComplement, 
                 bs.availableDays, bs.availableHours, 
                 bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId,
                 b.id AS workerWppId, b.name AS workerName, b.phone AS workerPhone, bsw.id AS workerId 
-                FROM barberShop AS a 
-                JOIN barberShop AS bs ON a.barberShop = bs.id 
-                JOIN barberShopWorker AS bsw ON a.barberShopWorker = bsw.id 
+                FROM barberShop AS bs
+                JOIN barberShopWorker AS bsw ON bs.id = bsw.barberShop 
                 JOIN barber AS b ON b.id = bsw.worker
-                JOIN customer AS c ON c.id = a.customer
                 JOIN city AS cy ON cy.id = bs.city 
-                WHERE bs.wppId = ? AND a.barberShopStatus = ?`,
-                [barberShopWppId, 'Agendado'],
+                WHERE bs.wppId = ?`,
+                [barberShopWppId],
                 function (err, rows, fields) {
                     if (err) reject(err);
                     // {
