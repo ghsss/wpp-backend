@@ -105,7 +105,7 @@ CREATE TABLE barberShopWorker (
 INSERT INTO barberShopWorker (barberShop, worker) VALUES (1, '555499026453@c.us');
      
 CREATE TABLE barberShopWorkerService(
-	id bigint auto_increment primary key,
+	id bigint unique auto_increment,
 	name varchar(250) not null,
     description varchar(500),
     durationInMinutes int not null,
@@ -113,6 +113,7 @@ CREATE TABLE barberShopWorkerService(
     availableHours varchar(1000) not null, # [{"0":["7:30 12:00","13:30 18:00"]}]
     barberShop bigint not null,
     barberShopWorker bigint not null,
+    PRIMARY KEY (name, barberShop, barberShopWorker),
     FOREIGN KEY (barberShop) REFERENCES barberShop(id),
     FOREIGN KEY (barberShopWorker) REFERENCES barberShopWorker(id)
 );
