@@ -83,7 +83,7 @@ class Barber {
                 databaseRecord[databaseRecordPropsDict[prop]] = this[prop];
             } else {
                 if (this.hasOwnProperty(prop) && Object.values(databaseRecordPropsDict).includes(prop)) {
-                    databaseRecord[databaseRecordPropsDict[prop]] = this[prop];
+                    databaseRecord[prop] = this[prop];
                 }
             }
         }
