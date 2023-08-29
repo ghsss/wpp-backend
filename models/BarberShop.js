@@ -93,10 +93,10 @@ class BarberShop {
                 }
             } else {
                 if (this.hasOwnProperty(prop) && Object.values(databaseRecordPropsDict).includes(prop)) {
-                    databaseRecord[databaseRecordPropsDict[prop]] = this[prop];
+                    databaseRecord[prop] = this[prop];
                     if ( prop == 'availableDays' || prop == 'availableHours' ) {
                         if ( typeof this[prop] == 'object' ) {
-                            databaseRecord[databaseRecordPropsDict[prop]] = JSON.parse(this[prop]);
+                            databaseRecord[prop] = JSON.parse(this[prop]);
                         }
                     }
                 }
