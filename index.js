@@ -28,6 +28,7 @@ const { AppointmentRouter } = require('./routes/appointment');
 const { AuthRouter } = require('./routes/auth');
 const { BarberShopRouter } = require('./routes/barberShop');
 const { CustomerRouter } = require('./routes/customer');
+const { BarberRouter } = require('./routes/barber');
 const app = express();
 
 app.use(AuthRouter);
@@ -35,6 +36,7 @@ app.use(AppointmentStatusRouter);
 app.use(AppointmentRouter);
 app.use(BarberShopRouter);
 app.use(CustomerRouter);
+app.use(BarberRouter);
 
 app.get('/', async (req, res) => {
     res.send('Hello world!');

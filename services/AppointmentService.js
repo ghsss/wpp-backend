@@ -265,7 +265,7 @@ class AppointmentService {
             const newList = [];
             // const newList = new Array(AppointmentClass);
             const keys = [
-                'dayAndTime', 'createdBy', 'modifiedBy', 'appointmentStatus', 'customer', 'barberShop', 'barberShopWorker'
+                'dayAndTime', 'createdBy', 'modifiedBy', 'appointmentStatus', 'customer', 'barberShop', 'barberShopWorker', 'service'
             ]
             for (const appointment of newAppointmentsList) {
                 let appointmentOrderedValues = [];
@@ -276,7 +276,7 @@ class AppointmentService {
             }
             console.log('Values >  ' + JSON.stringify(newList, null, 4));
             pool.query(
-                `INSERT INTO appointment(dayAndTime, createdBy, modifiedBy, appointmentStatus, customer, barberShop, barberShopWorker) 
+                `INSERT INTO appointment(dayAndTime, createdBy, modifiedBy, appointmentStatus, customer, barberShop, barberShopWorker, service) 
                  VALUES ?`,
                 [newList],
                 function (err, rows, fields) {
@@ -328,7 +328,7 @@ class AppointmentService {
             const pool = this.database.getPool();
             const newList = [];
             const keys = [
-                'dayAndTime', 'modifiedBy', 'appointmentStatus', 'customer', 'barberShopWorker', 'id'
+                'dayAndTime', 'service', 'modifiedBy', 'appointmentStatus', 'customer', 'barberShopWorker', 'id'
             ]
             for (const appointment of newAppointmentsList) {
                 let appointmentOrderedValues = [];
@@ -415,6 +415,151 @@ class AppointmentService {
                 pool.query(
                     query,
                     ...[newList],
+                    function (err, rows, fields) {
+                        if (err) {
+                            response.error = [];
+                            response.error.push(err);
+                            reject(response);
+                        }
+
+                        response.response = rows;
+                        response.fields = fields;
+                        resolve(response);
+
+                    })
+            }
+        })
+    }
+
+    async deleteAppointments(jsonData, authorizedWppId) {
+        if (typeof jsonData == 'string') {
+            try {
+                jsonData = JSON.parse(jsonData);
+            } catch (error) {
+                console.error('Error: expected a valid JSON as argument.\n' + error);
+            }
+        }
+        const newAppointmentsList = [];
+        if (Array.isArray(jsonData)) {
+            console.log('newAppointment Batch Input rows: ' + jsonData.length);
+            console.log('newAppointment Batch first input: ' + JSON.stringify(jsonData[0], null, 4));
+            for (const appointmentRow of jsonData) {
+                const appointment = new AppointmentClass(appointmentRow);
+                const appointmentRecord = appointment.toDatabaseRecord();
+                newAppointmentsList.push(appointmentRecord);
+            }
+        } else {
+            console.log('newAppointment Input: ' + JSON.stringify(jsonData, null, 4));
+            const appointment = new AppointmentClass(jsonData);
+            const appointmentRecord = appointment.toDatabaseRecord();
+            newAppointmentsList.push(appointmentRecord);
+        }
+        console.log('New appointments: ' + JSON.stringify(newAppointmentsList, null, 4));
+
+        return new Promise(async (resolve, reject) => {
+            const response = {
+                success: false,
+                response: []
+            }
+            if (newAppointmentsList.length == 0) { response.error = ['Error: empty list. Nothing to update']; reject(response) };
+            const pool = this.database.getPool();
+            const newList = [];
+            const keys = [
+                'id'
+            ]
+            for (const appointment of newAppointmentsList) {
+                let appointmentOrderedValues = [];
+                appointmentOrderedValues.push(authorizedWppId || null);
+                appointmentOrderedValues.push(authorizedWppId || null);
+                for (const key of keys) {
+                    appointmentOrderedValues.push(appointment[key] || null);
+                }
+                if (appointmentOrderedValues[appointmentOrderedValues.length - 1] == null) {
+                    response.error = ['Error to update appointment. Id cannot be null. Record index: ' + newList.length - 1];
+                    reject(response);
+                }
+                newList.push(appointmentOrderedValues);
+            }
+            console.log('Values >  ' + JSON.stringify(newList, null, 4));
+            const updateTable = 'DELETE a FROM appointment AS a LEFT JOIN barberShop AS bs ON bs.id = a.barberShop ';
+            let setStatement = 'WHERE (a.customer=? OR bs.wppId=?) AND ';
+            for (const key of keys) {
+                if (keys.indexOf(key) == 0) {
+                    setStatement += 'a.'+key+'=?';
+                    // for (const itemStr of newList) {
+                    //     if ( newList.indexOf(itemStr) > 1 )
+                    //     setStatement += ',?';
+                    // }
+                    // setStatement += ')';
+                } 
+                // else {'
+                //     if (keys.indexOf(key) == keys.length - 1) {
+                //         setStatement += ' AND ' + key + '=? ';
+                //     } else {
+                //         setStatement += ' AND ' + key + '=?';
+                //     }
+                // }
+            }
+            const query = updateTable + setStatement;
+            console.log(query);
+            console.log(...newList);
+
+            if ([...newList].length > 1) {
+                console.log([...newList].length);
+                const promises = [];
+                pool.getConnection( async (err, conn) => {
+                    if (err) {
+                        response.error = []
+                        response.error.push(err);
+                        reject(response);
+                    }
+                    const queryPromise = async (nL) => {
+                        // console.log([Object.values(el)]);
+                        return new Promise((resolve, reject) => {
+                            const res = {
+                                response: []
+                            };
+                            conn.query(
+                                query,
+                                ...nL,
+                                function (err, rows, fields) {
+                                    console.log(rows);
+                                    if (err) {
+                                        if (!Object.keys(res).includes('error')) {
+                                            res.error = [];
+                                        }
+                                        res.error.push(err);
+                                        reject(res);
+                                    } else {
+                                        res.response.push(rows);
+                                        // res.fields = fields;
+                                        resolve(res);
+                                    }
+                                })
+                        });
+                    }
+                    for await (const nL of newList) {
+                        await queryPromise(nL).then( res => {
+                            response.response.push(res.response[0]);
+                        })
+                        .catch( err => {
+                            if ( !Object.keys(response).includes('error') ) {
+                                response.error = []; 
+                            }
+                            response.error.push(err); 
+                        });
+                    }
+                    conn.release();
+                    if (Object.keys(response).includes('error')) {
+                        reject(response);
+                    } else {
+                        resolve(response);
+                    }
+                });
+            } else {
+                pool.query(
+                    query,
+                    ...newList,
                     function (err, rows, fields) {
                         if (err) {
                             response.error = [];

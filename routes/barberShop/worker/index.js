@@ -104,7 +104,7 @@ router.put('/barberShopWorker', isAuthorized, async (req, res) => {
         // ADICIONAR SEGUNDO PARAMETRO wppId NO METODO updateBarberShopWorkers 
         // E CONDICAO NA CLAUSULA WHERE SE BARBER ID = WPPID OU BARBERSHOP.WPPID = WPPID
         // PARA PERMITIR SOMENTE ATUALIZAR O REGISTRO SE FOR A BARBEARIA OU O BARBEIRO VINCULADO AO ID
-        await BarberShopWorkerService.updateBarberShopWorkers(req.body)
+        await BarberShopWorkerService.updateBarberShopWorkers(req.body, wppId)
         .then( barberShopWorkers =>  {
             res.statusCode = 200;
             res.send(barberShopWorkers);

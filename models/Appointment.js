@@ -121,7 +121,8 @@ class Appointment {
             'dayAndTime': 'dayAndTime',
             'barberShopId': 'barberShop',
             'workerId': 'barberShopWorker',
-            'appointmentStatus': 'appointmentStatus'
+            'appointmentStatus': 'appointmentStatus',
+            'service': 'service'
         }
         const databaseRecord = {};
         for ( const prop in this ) {
