@@ -366,6 +366,151 @@ class BarberShopWorkerService {
         })
     }
 
+    async deleteBarberShopWorkers(jsonData, authorizedWppId) {
+        if (typeof jsonData == 'string') {
+            try {
+                jsonData = JSON.parse(jsonData);
+            } catch (error) {
+                console.error('Error: expected a valid JSON as argument.\n' + error);
+            }
+        }
+        const newBarberShopWorkersList = [];
+        if (Array.isArray(jsonData)) {
+            console.log('newBarberShopWorker Batch Input rows: ' + jsonData.length);
+            console.log('newBarberShopWorker Batch first input: ' + JSON.stringify(jsonData[0], null, 4));
+            for (const BarberShopWorkerRow of jsonData) {
+                const BarberShopWorker = new BarberShopWorkerClass(BarberShopWorkerRow);
+                const BarberShopWorkerRecord = BarberShopWorker.toDatabaseRecord();
+                newBarberShopWorkersList.push(BarberShopWorkerRecord);
+            }
+        } else {
+            console.log('newBarberShopWorker Input: ' + JSON.stringify(jsonData, null, 4));
+            const BarberShopWorker = new BarberShopWorkerClass(jsonData);
+            const BarberShopWorkerRecord = BarberShopWorker.toDatabaseRecord();
+            newBarberShopWorkersList.push(BarberShopWorkerRecord);
+        }
+        console.log('New BarberShopWorkers: ' + JSON.stringify(newBarberShopWorkersList, null, 4));
+
+        return new Promise(async (resolve, reject) => {
+            const response = {
+                success: false,
+                response: []
+            }
+            if (newBarberShopWorkersList.length == 0) { response.error = ['Error: empty list. Nothing to update']; reject(response) };
+            const pool = this.database.getPool();
+            const newList = [];
+            const keys = [
+                'id'
+            ]
+            for (const BarberShopWorker of newBarberShopWorkersList) {
+                let BarberShopWorkerOrderedValues = [];
+                BarberShopWorkerOrderedValues.push(authorizedWppId || null);
+                BarberShopWorkerOrderedValues.push(authorizedWppId || null);
+                for (const key of keys) {
+                    BarberShopWorkerOrderedValues.push(BarberShopWorker[key] || null);
+                }
+                if (BarberShopWorkerOrderedValues[BarberShopWorkerOrderedValues.length - 1] == null) {
+                    response.error = ['Error to delete BarberShopWorker. Id cannot be null. Record index: ' + newList.length - 1];
+                    reject(response);
+                }
+                newList.push(BarberShopWorkerOrderedValues);
+            }
+            console.log('Values >  ' + JSON.stringify(newList, null, 4));
+            const updateTable = 'DELETE bsw FROM barberShopWorker AS bsw LEFT JOIN barberShop AS bs ON bs.id = bsw.barberShop ';
+            let setStatement = ' WHERE (bsw.worker=? OR bs.wppId=?) AND ';
+            for (const key of keys) {
+                if (keys.indexOf(key) == 0) {
+                    setStatement += 'bsw.'+key+'=?';
+                    // for (const itemStr of newList) {
+                    //     if ( newList.indexOf(itemStr) > 1 )
+                    //     setStatement += ',?';
+                    // }
+                    // setStatement += ')';
+                } 
+                // else {'
+                //     if (keys.indexOf(key) == keys.length - 1) {
+                //         setStatement += ' AND ' + key + '=? ';
+                //     } else {
+                //         setStatement += ' AND ' + key + '=?';
+                //     }
+                // }
+            }
+            const query = updateTable + setStatement;
+            console.log(query);
+            console.log(...newList);
+
+            if ([...newList].length > 1) {
+                console.log([...newList].length);
+                const promises = [];
+                pool.getConnection( async (err, conn) => {
+                    if (err) {
+                        response.error = []
+                        response.error.push(err);
+                        reject(response);
+                    }
+                    const queryPromise = async (nL) => {
+                        // console.log([Object.values(el)]);
+                        return new Promise((resolve, reject) => {
+                            const res = {
+                                response: []
+                            };
+                            conn.query(
+                                query,
+                                ...nL,
+                                function (err, rows, fields) {
+                                    console.log(rows);
+                                    if (err) {
+                                        if (!Object.keys(res).includes('error')) {
+                                            res.error = [];
+                                        }
+                                        res.error.push(err);
+                                        reject(res);
+                                    } else {
+                                        res.response.push(rows);
+                                        // res.fields = fields;
+                                        resolve(res);
+                                    }
+                                })
+                        });
+                    }
+                    for await (const nL of newList) {
+                        await queryPromise(nL).then( res => {
+                            response.response.push(res.response[0]);
+                        })
+                        .catch( err => {
+                            if ( !Object.keys(response).includes('error') ) {
+                                response.error = []; 
+                            }
+                            response.error.push(err); 
+                        });
+                    }
+                    conn.release();
+                    if (Object.keys(response).includes('error')) {
+                        reject(response);
+                    } else {
+                        resolve(response);
+                    }
+                });
+            } else {
+                pool.query(
+                    query,
+                    ...newList,
+                    function (err, rows, fields) {
+                        if (err) {
+                            response.error = [];
+                            response.error.push(err);
+                            reject(response);
+                        }
+
+                        response.response = rows;
+                        response.fields = fields;
+                        resolve(response);
+
+                    })
+            }
+        })
+    }
+
 }
 
 module.exports.BarberShopWorkerService = new BarberShopWorkerService();

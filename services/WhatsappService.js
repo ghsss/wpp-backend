@@ -86,6 +86,7 @@ class WhatsappService {
                 });
                 this.#client.on('loading_screen', (percentage, message) => {
                     console.log('Client is loading '+percentage+'%... '+message.toString());
+                    // if ( percentage == 100 ) resolve();
                     // resolve();
                 });
                 this.#client.on('disconnected', (reason) => {
@@ -117,14 +118,17 @@ class WhatsappService {
         for await (let message of messages) {
             await this.#client.sendMessage(message.chatId, String(message.text))
             .then( m => {
+                response.success=true;
                 response.response.push(m);
                 console.log(JSON.stringify(m));
             })
             .catch( err => {
+                response.success=false;
                 console.log(err);
                 if ( !Object.keys(response).includes('error') ) {
                     response.error = [err.toString()];
                 } else {
+                    
                     response.error.push(err.toString());
                 }
             });

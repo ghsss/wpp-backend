@@ -61,7 +61,8 @@ class BarberShopWorkerService {
         // barberShop bigint not null,
         // barberShopWorker bigint not null,
         const databaseRecordPropsDict = {
-            'service': 'name', 'serviceDescription': 'description', 'serviceDurationInMinutes': 'durationInMinutes',
+            'service': 'id',
+            'serviceName': 'name', 'serviceDescription': 'description', 'serviceDurationInMinutes': 'durationInMinutes',
             'availableDays': 'availableDays', 'availableHours': 'availableHours', 'barberShopId': 'barberShop',
             'workerId': 'barberShopWorker'
         }

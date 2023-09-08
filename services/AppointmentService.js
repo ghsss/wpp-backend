@@ -38,18 +38,20 @@ class AppointmentService {
         return new Promise((resolve, reject) => {
             pool.query(
                 `SELECT 
-                a.id, a.dayAndTime, a.createdBy, a.modifiedBy, a.createdAt, a.modifiedAt, a.appointmentStatus,
+                a.id, a.dayAndTime, a.createdBy, a.modifiedBy, a.createdAt, a.modifiedAt, a.appointmentStatus, a.service, 
                 c.id AS customerId, c.name AS customerName, c.phone as customerPhone,
                 bs.id as barberShopId, bs.name as barberShopName, bs.phone as barberShopPhone, bs.city as barberShopCity, cy.name as barberShopCityName, 
                 bs.neighborhood as barberShopNeighborhood, bs.street as barberShopStreet, bs.number as barberShopNumber, bs.complement barberShopComplement, 
                 bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId,
-                b.id AS workerWppId, b.name AS workerName, b.phone AS workerPhone, bsw.id AS workerId 
-                FROM appointment AS a 
+                b.id AS workerWppId, b.name AS workerName, b.phone AS workerPhone, bsw.id AS workerId,
+                s.name AS serviceName, s.durationInMinutes
+                FROM appointment AS a
                 JOIN barberShop AS bs ON a.barberShop = bs.id 
                 JOIN barberShopWorker AS bsw ON a.barberShopWorker = bsw.id 
                 JOIN barber AS b ON b.id = bsw.worker
                 JOIN customer AS c ON c.id = a.customer
-                JOIN city AS cy ON cy.id = bs.city 
+                JOIN city AS cy ON cy.id = bs.city
+                JOIN barberShopWorkerService AS s ON a.service = s.id
                 WHERE bs.wppId = ? AND a.appointmentStatus = ?`,
                 [barberShopWppId, 'Agendado'],
                 function (err, rows, fields) {
@@ -107,18 +109,20 @@ class AppointmentService {
         return new Promise((resolve, reject) => {
             pool.query(
                 `SELECT 
-                a.id, a.dayAndTime, a.createdBy, a.modifiedBy, a.createdAt, a.modifiedAt, a.appointmentStatus,
+                a.id, a.dayAndTime, a.createdBy, a.modifiedBy, a.createdAt, a.modifiedAt, a.appointmentStatus, a.service, 
                 c.id AS customerId, c.name AS customerName, c.phone as customerPhone,
                 bs.id as barberShopId, bs.name as barberShopName, bs.phone as barberShopPhone, bs.city as barberShopCity, cy.name as barberShopCityName, 
                 bs.neighborhood as barberShopNeighborhood, bs.street as barberShopStreet, bs.number as barberShopNumber, bs.complement barberShopComplement, 
                 bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId,
-                b.id AS workerWppId, b.name AS workerName, b.phone AS workerPhone, bsw.id AS workerId
+                b.id AS workerWppId, b.name AS workerName, b.phone AS workerPhone, bsw.id AS workerId,
+                s.name AS serviceName, s.durationInMinutes
                 FROM appointment AS a 
                 JOIN barberShop AS bs ON a.barberShop = bs.id OR a.createdBy = bs.wppId  
                 JOIN barberShopWorker AS bsw ON a.barberShopWorker = bsw.id 
                 JOIN barber AS b ON b.id = bsw.worker OR a.createdBy = b.id  
                 JOIN customer AS c ON c.id = a.customer OR a.createdBy = c.id  
                 JOIN city AS cy ON cy.id = bs.city
+                JOIN barberShopWorkerService AS s ON a.service = s.id
                 WHERE customer = ?`,
                 [customerId],
                 function (err, rows, fields) {
@@ -174,18 +178,20 @@ class AppointmentService {
         return new Promise((resolve, reject) => {
             pool.query(
                 `SELECT 
-                a.id, a.dayAndTime, a.createdBy, a.modifiedBy, a.createdAt, a.modifiedAt, a.appointmentStatus,
+                a.id, a.dayAndTime, a.createdBy, a.modifiedBy, a.createdAt, a.modifiedAt, a.appointmentStatus, a.service, 
                 c.id AS customerId, c.name AS customerName, c.phone as customerPhone,
                 bs.id as barberShopId, bs.name as barberShopName, bs.phone as barberShopPhone, bs.city as barberShopCity, cy.name as barberShopCityName, 
                 bs.neighborhood as barberShopNeighborhood, bs.street as barberShopStreet, bs.number as barberShopNumber, bs.complement barberShopComplement, 
                 bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId,
-                b.id AS workerWppId, b.name AS workerName, b.phone AS workerPhone, bsw.id AS workerId 
+                b.id AS workerWppId, b.name AS workerName, b.phone AS workerPhone, bsw.id AS workerId,
+                s.name AS serviceName, s.durationInMinutes
                 FROM appointment AS a 
                 JOIN barberShop AS bs ON a.barberShop = bs.id 
                 JOIN barberShopWorker AS bsw ON a.barberShopWorker = bsw.id 
                 JOIN barber AS b ON b.id = bsw.worker
                 JOIN customer AS c ON c.id = a.customer
                 JOIN city AS cy ON cy.id = bs.city 
+                JOIN barberShopWorkerService AS s ON a.service = s.id
                 WHERE b.id = ? AND bs.id = ?`,
                 [workerId, barberShop],
                 function (err, rows, fields) {

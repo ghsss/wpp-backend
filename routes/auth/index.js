@@ -76,8 +76,8 @@ router.get('/verificationToken', async (req, res) => {
         console.log('Wpp: ' + wppId);
         const token = AuthService.generateToken(wppId);
         await WhatsappService.sendTextMessages([
-            { chatId: wppId, text: 'Seu token de verificação do aplicativo Barbeiro: ' },
-            { chatId: wppId, text: token }
+            { chatId: wppId, text: 'Seu token de verificação do aplicativo Barbeiro: \n*'+token+'*' }
+            // { chatId: wppId, text: token }
         ])
             .then(logged => {
                 res.statusCode = 200;

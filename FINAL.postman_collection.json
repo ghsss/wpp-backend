@@ -298,6 +298,11 @@
 										"key": "wppId",
 										"value": "555499026453@c.us",
 										"type": "text"
+									},
+									{
+										"key": "token",
+										"value": "{{token}}",
+										"type": "text"
 									}
 								],
 								"url": {
@@ -469,13 +474,48 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"Corte de cabeloberro\",\r\n    \"description\": null,\r\n    \"durationInMinutes\": 30,\r\n    \"availableDays\": \"[1,2,3,4,5]\",\r\n    \"availableHours\": \"[{\\\"1\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"2\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"],{\\\"3\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"4\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"5\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}]}]\",\r\n    \"barberShop\": 1,\r\n    \"barberShopWorker\": 1\r\n}",
+									"raw": "{\r\n    \"name\": \"Corte de cabeloberro bereirleiroledasndas\",\r\n    \"description\": null,\r\n    \"durationInMinutes\": 30,\r\n    \"availableDays\": \"[1,2,3,4,5]\",\r\n    \"availableHours\": \"[{\\\"1\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"2\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"],{\\\"3\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"4\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"5\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}]}]\",\r\n    \"barberShop\": 1,\r\n    \"barberShopWorker\": 1\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
 										}
 									}
 								},
+								"url": {
+									"raw": "localhost:3000/barberShop/services",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"barberShop",
+										"services"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE Services",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "wppId",
+										"value": "555499026453@c.us",
+										"type": "text"
+									},
+									{
+										"key": "token",
+										"value": "{{token}}",
+										"type": "text"
+									},
+									{
+										"key": "ids",
+										"value": "5",
+										"type": "text"
+									}
+								],
 								"url": {
 									"raw": "localhost:3000/barberShop/services",
 									"host": [
@@ -503,8 +543,7 @@
 									{
 										"key": "wppId",
 										"value": "555499026453@c.us",
-										"type": "text",
-										"disabled": true
+										"type": "text"
 									},
 									{
 										"key": "token",
@@ -585,7 +624,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "[\r\n    {\r\n        \"barberShop\": 1,\r\n        \"worker\": \"555499026453@c.us\"\r\n    }\r\n]",
+									"raw": "[\r\n    {\r\n        \"id\": 1,\r\n        \"barberShop\": 1,\r\n        \"worker\": \"555499026452@c.us\"\r\n    }\r\n]",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -626,23 +665,8 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:3000/barberShopWorker",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"barberShopWorker"
-									]
+									"raw": ""
 								}
-							},
-							"response": []
-						},
-						{
-							"name": "DELETE BarberShopWorker",
-							"request": {
-								"method": "DELETE",
-								"header": []
 							},
 							"response": []
 						},
@@ -690,6 +714,40 @@
 									"path": [
 										"barberShopWorker",
 										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE BarberShopWorker",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "wppId",
+										"value": "555499026453@c.us",
+										"type": "text"
+									},
+									{
+										"key": "token",
+										"value": "{{token}}",
+										"type": "text"
+									},
+									{
+										"key": "ids",
+										"value": "4",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:3000/barberShopWorker",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"barberShopWorker"
 									]
 								}
 							},
