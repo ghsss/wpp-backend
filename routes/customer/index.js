@@ -2,7 +2,7 @@ const router = require('express').Router();
 const express = require('express');
 const { CustomerService } = require('../../services/CustomerService');
 const { CustomerAppointmentRouter } = require('./appointment');
-const { isAuthorized } = require('../auth');
+const { isAuthorized, verifyDeletionToken } = require('../auth');
 
 router.use(express.json());
 router.use(CustomerAppointmentRouter);
@@ -92,7 +92,7 @@ router.put('/customers', async (req, res) => {
 
 });
 
-router.delete('/customer', isAuthorized, async (req, res) => {
+router.delete('/customer', verifyDeletionToken, async (req, res) => {
 
     try {
         const authorizedUser = req.authorizedUser;
