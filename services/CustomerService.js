@@ -358,6 +358,151 @@ class CustomerService {
         })
     }
 
+    async deleteCustomers(jsonData, authorizedWppId) {
+        if (typeof jsonData == 'string') {
+            try {
+                jsonData = JSON.parse(jsonData);
+            } catch (error) {
+                console.error('Error: expected a valid JSON as argument.\n' + error);
+            }
+        }
+        const newCustomersList = [];
+        if (Array.isArray(jsonData)) {
+            console.log('newCustomer Batch Input rows: ' + jsonData.length);
+            console.log('newCustomer Batch first input: ' + JSON.stringify(jsonData[0], null, 4));
+            for (const CustomerRow of jsonData) {
+                const Customer = new CustomerClass(CustomerRow);
+                const CustomerRecord = Customer.toDatabaseRecord();
+                newCustomersList.push(CustomerRecord);
+            }
+        } else {
+            console.log('newCustomer Input: ' + JSON.stringify(jsonData, null, 4));
+            const Customer = new CustomerClass(jsonData);
+            const CustomerRecord = Customer.toDatabaseRecord();
+            newCustomersList.push(CustomerRecord);
+        }
+        console.log('New Customers: ' + JSON.stringify(newCustomersList, null, 4));
+
+        return new Promise(async (resolve, reject) => {
+            const response = {
+                success: false,
+                response: []
+            }
+            if (newCustomersList.length == 0) { response.error = ['Error: empty list. Nothing to update']; reject(response) };
+            const pool = this.database.getPool();
+            const newList = [];
+            const keys = [
+                'id'
+            ]
+            for (const Customer of newCustomersList) {
+                let CustomerOrderedValues = [];
+                CustomerOrderedValues.push(authorizedWppId || null);
+                // CustomerOrderedValues.push(authorizedWppId || null);
+                for (const key of keys) {
+                    CustomerOrderedValues.push(Customer[key] || null);
+                }
+                if (CustomerOrderedValues[CustomerOrderedValues.length - 1] == null) {
+                    response.error = ['Error to delete Customer. Id cannot be null. Record index: ' + newList.length - 1];
+                    reject(response);
+                }
+                newList.push(CustomerOrderedValues);
+            }
+            console.log('Values >  ' + JSON.stringify(newList, null, 4));
+            const updateTable = 'DELETE c FROM customer AS c ';
+            let setStatement = ' WHERE c.id=? AND ';
+            for (const key of keys) {
+                if (keys.indexOf(key) == 0) {
+                    setStatement += 'c.'+key+'=?';
+                    // for (const itemStr of newList) {
+                    //     if ( newList.indexOf(itemStr) > 1 )
+                    //     setStatement += ',?';
+                    // }
+                    // setStatement += ')';
+                } 
+                // else {'
+                //     if (keys.indexOf(key) == keys.length - 1) {
+                //         setStatement += ' AND ' + key + '=? ';
+                //     } else {
+                //         setStatement += ' AND ' + key + '=?';
+                //     }
+                // }
+            }
+            const query = updateTable + setStatement;
+            console.log(query);
+            console.log(...newList);
+
+            if ([...newList].length > 1) {
+                console.log([...newList].length);
+                const promises = [];
+                pool.getConnection( async (err, conn) => {
+                    if (err) {
+                        response.error = []
+                        response.error.push(err);
+                        reject(response);
+                    }
+                    const queryPromise = async (nL) => {
+                        // console.log([Object.values(el)]);
+                        return new Promise((resolve, reject) => {
+                            const res = {
+                                response: []
+                            };
+                            conn.query(
+                                query,
+                                ...nL,
+                                function (err, rows, fields) {
+                                    console.log(rows);
+                                    if (err) {
+                                        if (!Object.keys(res).includes('error')) {
+                                            res.error = [];
+                                        }
+                                        res.error.push(err);
+                                        reject(res);
+                                    } else {
+                                        res.response.push(rows);
+                                        // res.fields = fields;
+                                        resolve(res);
+                                    }
+                                })
+                        });
+                    }
+                    for await (const nL of newList) {
+                        await queryPromise(nL).then( res => {
+                            response.response.push(res.response[0]);
+                        })
+                        .catch( err => {
+                            if ( !Object.keys(response).includes('error') ) {
+                                response.error = []; 
+                            }
+                            response.error.push(err); 
+                        });
+                    }
+                    conn.release();
+                    if (Object.keys(response).includes('error')) {
+                        reject(response);
+                    } else {
+                        resolve(response);
+                    }
+                });
+            } else {
+                pool.query(
+                    query,
+                    ...newList,
+                    function (err, rows, fields) {
+                        if (err) {
+                            response.error = [];
+                            response.error.push(err);
+                            reject(response);
+                        }
+
+                        response.response = rows;
+                        response.fields = fields;
+                        resolve(response);
+
+                    })
+            }
+        })
+    }
+
 }
 
 module.exports.CustomerService = new CustomerService();
