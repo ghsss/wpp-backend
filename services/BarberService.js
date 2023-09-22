@@ -201,6 +201,7 @@ class BarberService {
 
                     response.response = rows;
                     response.fields = fields;
+                    response.success = true;
                     resolve(response);
 
                 })
@@ -335,6 +336,7 @@ class BarberService {
                     if (Object.keys(response).includes('error')) {
                         reject(response);
                     } else {
+                        response.success = true;
                         resolve(response);
                     }
                 });
@@ -351,6 +353,7 @@ class BarberService {
 
                         response.response = rows;
                         response.fields = fields;
+                        response.success = true;
                         resolve(response);
 
                     })

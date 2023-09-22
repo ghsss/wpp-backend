@@ -204,6 +204,7 @@ class BarberShopWorkerService {
 
                     response.response = rows;
                     response.fields = fields;
+                    response.success = true;
                     resolve(response);
 
                 })
@@ -343,6 +344,7 @@ class BarberShopWorkerService {
                     if (Object.keys(response).includes('error')) {
                         reject(response);
                     } else {
+                        response.success = true;
                         resolve(response);
                     }
                 });
@@ -359,6 +361,7 @@ class BarberShopWorkerService {
 
                         response.response = rows;
                         response.fields = fields;
+                        response.success = true;
                         resolve(response);
 
                     })
@@ -456,7 +459,7 @@ class BarberShopWorkerService {
                             };
                             conn.query(
                                 query,
-                                ...nL,
+                                ...[nL],
                                 function (err, rows, fields) {
                                     console.log(rows);
                                     if (err) {
@@ -488,6 +491,7 @@ class BarberShopWorkerService {
                     if (Object.keys(response).includes('error')) {
                         reject(response);
                     } else {
+                        response.success = true;
                         resolve(response);
                     }
                 });
@@ -504,6 +508,7 @@ class BarberShopWorkerService {
 
                         response.response = rows;
                         response.fields = fields;
+                        response.success = true;
                         resolve(response);
 
                     })

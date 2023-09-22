@@ -51,7 +51,7 @@ router.post('/barberShop/services', isAuthorized, async (req, res) => {
 router.put('/barberShop/services', isAuthorized, async (req, res) => {
 
     try {
-        await BarberShopWorkerServiceService.updateBarberShops(req.body)
+        await BarberShopWorkerServiceService.updateBarberShopWorkerServices(req.body)
         .then( barberShopWorkerServices =>  {
             res.statusCode = 200;
             res.send(barberShopWorkerServices);

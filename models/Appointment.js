@@ -115,6 +115,8 @@ class Appointment {
             'id': 'id',
             // 'createdAt': 'createdAt',
             // 'modifiedAt': 'modifiedAt',
+            "createdBy": "555499026453@c.us",
+            'customerId': 'customer',
             'createdBy': 'createdBy',
             'modifiedBy': 'modifiedBy',
             'customerId': 'customer',

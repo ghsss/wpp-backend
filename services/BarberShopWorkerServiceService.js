@@ -44,7 +44,7 @@ class BarberShopWorkerServiceService {
 
             pool.query(
                 `SELECT 
-                a.id, a.name, a.description, a.durationInMinutes, a.availableDays, a.availableHours,
+                a.id, a.name, a.description, a.durationInMinutes, a.availableDays, a.availableHours, a.active,
                 bs.id as barberShopId, bs.name as barberShopName, bs.phone as barberShopPhone, bs.city as barberShopCity, cy.name as barberShopCityName, 
                 bs.neighborhood as barberShopNeighborhood, bs.street as barberShopStreet, bs.number as barberShopNumber, bs.complement barberShopComplement, 
                 bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId,
@@ -66,9 +66,9 @@ class BarberShopWorkerServiceService {
                     //     "modifiedBy": null,
                     //     "createdAt": "2023-08-08T04:46:46.000Z",
                     //     "modifiedAt": "2023-08-08T04:46:46.000Z",
-                    //     "customerId": "555499026453@c.us",
-                    //     "customerName": "Gabriel",
-                    //     "customerPhone": "555499026453",
+                    //     "barberShopWorkerServiceId": "555499026453@c.us",
+                    //     "barberShopWorkerServiceName": "Gabriel",
+                    //     "barberShopWorkerServicePhone": "555499026453",
                     //     "barberShopId": 1,
                     //     "barberShopName": "Barbearia do Gabriel",
                     //     "barberShopPhone": "",
@@ -142,7 +142,7 @@ class BarberShopWorkerServiceService {
             // barberShop bigint not null,
             // barberShopWorker bigint not null,
             const keys = [
-                'name', 'description', 'durationInMinutes', 'availableDays', 'availableHours', 'barberShop', 'barberShopWorker'
+                'name', 'description', 'active', 'durationInMinutes', 'availableDays', 'availableHours', 'barberShop', 'barberShopWorker'
             ]
             for (const barberShop of newbarberShopWorkerServicesList) {
                 let barberShopOrderedValues = [];
@@ -179,13 +179,14 @@ class BarberShopWorkerServiceService {
 
                     response.response = rows;
                     response.fields = fields;
+                    response.success = true;
                     resolve(response);
 
                 })
         });
     }
 
-    async updateBarberShops(jsonData) {
+    async updateBarberShopWorkerServices(jsonData) {
         if (typeof jsonData == 'string') {
             try {
                 jsonData = JSON.parse(jsonData);
@@ -233,18 +234,18 @@ class BarberShopWorkerServiceService {
             // createdAt timestamp DEFAULT CURRENT_TIMESTAMP ,
             // modifiedAt timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             const keys = [
-                'name', 'description', 'durationInMinutes', 'availableDays', 'availableHours', 'barberShop', 'barberShopWorker', 'id'
+                'name', 'description', 'active', 'durationInMinutes', 'availableDays', 'availableHours', 'barberShop', 'barberShopWorker', 'id'
             ]
-            for (const barberShop of newbarberShopWorkerServicesList) {
-                let barberShopOrderedValues = [];
+            for (const barberShopWorkerService of newbarberShopWorkerServicesList) {
+                let barberShopWorkerServiceOrderedValues = [];
                 for (const key of keys) {
-                    barberShopOrderedValues.push(barberShop[key] || null);
+                    barberShopWorkerServiceOrderedValues.push(barberShopWorkerService[key] || null);
                 }
-                if (barberShopOrderedValues[barberShopOrderedValues.length - 1] == null) {
+                if (barberShopWorkerServiceOrderedValues[barberShopWorkerServiceOrderedValues.length - 1] == null) {
                     response.error = ['Error to update barberShopWorkerService. wppId cannot be null. Record index: ' + newList.length - 1];
                     reject(response);
                 }
-                newList.push(barberShopOrderedValues);
+                newList.push(barberShopWorkerServiceOrderedValues);
             }
             console.log('Values >  ' + JSON.stringify(newList, null, 4));
             const updateTable = 'UPDATE barberShopWorkerService ';
@@ -313,13 +314,14 @@ class BarberShopWorkerServiceService {
                     if (Object.keys(response).includes('error')) {
                         reject(response);
                     } else {
+                        response.success = true;
                         resolve(response);
                     }
                 });
             } else {
                 pool.query(
                     query,
-                    ...[newList],
+                    ...newList,
                     function (err, rows, fields) {
                         if (err) {
                             response.error = [];
@@ -328,6 +330,7 @@ class BarberShopWorkerServiceService {
                         }
 
                         response.response = rows;
+                        response.success = true;
                         response.fields = fields;
                         resolve(response);
 
@@ -427,7 +430,7 @@ class BarberShopWorkerServiceService {
                             };
                             conn.query(
                                 query,
-                                ...nL,
+                                ...[nL],
                                 function (err, rows, fields) {
                                     console.log(rows);
                                     if (err) {
@@ -459,6 +462,7 @@ class BarberShopWorkerServiceService {
                     if (Object.keys(response).includes('error')) {
                         reject(response);
                     } else {
+                        response.success = true;
                         resolve(response);
                     }
                 });
@@ -475,6 +479,7 @@ class BarberShopWorkerServiceService {
 
                         response.response = rows;
                         response.fields = fields;
+                        response.success = true;
                         resolve(response);
 
                     })

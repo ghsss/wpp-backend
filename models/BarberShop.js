@@ -78,27 +78,19 @@ class BarberShop {
             'barberShopId': 'id', 'barberShopName': 'name', 'barberShopPhone': 'phone', 
             'barberShopCity': 'city', 'barberShopNeighborhood': 'neighborhood', 'barberShopStreet': 'street', 
             'barberShopNumber': 'number', 'barberShopComplement': 'complement', 'barberShopWppId': 'wppId', 
-            // 'availableDays': 'availableDays', 'availableHours': 'availableHours',
+            'availableDays': 'availableDays', 'availableHours': 'availableHours',
             'geolocationLatitude': 'geolocationLatitude', 'geolocationLongitude': 'geolocationLongitude'
         }
         const databaseRecord = {};
         for (const prop in this) {
-            if (this.hasOwnProperty(prop) && Object.keys(databaseRecordPropsDict).includes(prop)) {
+            if (this.hasOwnProperty(prop) && Object.keys(databaseRecordPropsDict).includes(prop) ) {
                 // do stuff
+                console.log(databaseRecordPropsDict[prop]);
                 databaseRecord[databaseRecordPropsDict[prop]] = this[prop];
-                if ( prop == 'availableDays' || prop == 'availableHours' ) {
-                    if ( typeof this[prop] == 'object' ) {
-                        databaseRecord[databaseRecordPropsDict[prop]] = JSON.parse(this[prop]);
-                    }
-                }
             } else {
                 if (this.hasOwnProperty(prop) && Object.values(databaseRecordPropsDict).includes(prop)) {
+                    // console.log(databaseRecordPropsDict[prop]);
                     databaseRecord[prop] = this[prop];
-                    if ( prop == 'availableDays' || prop == 'availableHours' ) {
-                        if ( typeof this[prop] == 'object' ) {
-                            databaseRecord[prop] = JSON.parse(this[prop]);
-                        }
-                    }
                 }
             }
         }

@@ -81,6 +81,7 @@ module.exports.verifyDeletionToken = async (req, res, next) => {
             console.log('Valid token!!!\n'+hex);
             // if (isValid) {
             res.statusCode = 200;
+            req.authorizedUser = { wppId };
             // req.isValid = isValid;
             next();
             // res.send(hex);

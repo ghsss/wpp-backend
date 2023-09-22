@@ -214,6 +214,7 @@ class BarberShopService {
 
                     response.response = rows;
                     response.fields = fields;
+                    response.success = true;
                     resolve(response);
 
                 })
@@ -334,6 +335,7 @@ class BarberShopService {
                     }
                     conn.release();
                     if (Object.keys(response).includes('error')) {
+                        response.success = true;
                         reject(response);
                     } else {
                         resolve(response);
@@ -352,6 +354,7 @@ class BarberShopService {
 
                         response.response = rows;
                         response.fields = fields;
+                        response.success = true;
                         resolve(response);
 
                     })
@@ -562,8 +565,8 @@ class BarberShopService {
             //     'INNER JOIN barberShopWorker AS bsw ON bsw.barberShop=bs.id ';
             // // 'INNER JOIN appointments AS a ON a.barberShop=bs.id';
             // let setStatement = ' WHERE bs.wppId=? ';
-            const updateTable = 'DELETE s FROM barberShop AS bs ' +
-                'INNER JOIN barberShopWorkerService AS s ON s.barberShop=bs.id ';
+            const updateTable = 'DELETE a FROM barberShop AS bs ' +
+                'INNER JOIN appointment AS a ON a.barberShop=bs.id ';
             // 'INNER JOIN appointments AS a ON a.barberShop=bs.id';
             let setStatement = ' WHERE bs.wppId=? ';
 
@@ -606,7 +609,7 @@ class BarberShopService {
                             };
                             conn.query(
                                 query,
-                                ...nL,
+                                ...[nL],
                                 function (err, rows, fields) {
                                     console.log(rows);
                                     if (err) {
@@ -638,6 +641,7 @@ class BarberShopService {
                     if (Object.keys(response).includes('error')) {
                         reject(response);
                     } else {
+                        response.success = true;
                         resolve(response);
                     }
                 });
@@ -660,8 +664,8 @@ class BarberShopService {
                         // // 'INNER JOIN appointments AS a ON a.barberShop=bs.id';
                         // let setStatement2 = ' WHERE bs.wppId=? ';
 
-                        const updateTable2 = 'DELETE a FROM barberShop AS bs ' +
-                        'INNER JOIN appointment AS a ON a.barberShop=bs.id ';
+                        const updateTable2 = 'DELETE s FROM barberShop AS bs ' +
+                            'INNER JOIN barberShopWorkerService AS s ON s.barberShop=bs.id ';
                         // 'INNER JOIN appointments AS a ON a.barberShop=bs.id';
                         let setStatement2 = ' WHERE bs.wppId=? ';
 
@@ -720,6 +724,7 @@ class BarberShopService {
 
                                                 response.response = rows;
                                                 response.fields = fields;
+                                                response.success = true;
                                                 resolve(response);
 
                                                 // const updateTable3 = 'DELETE bs FROM barberShop AS bs ';

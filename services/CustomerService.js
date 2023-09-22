@@ -201,6 +201,7 @@ class CustomerService {
 
                     response.response = rows;
                     response.fields = fields;
+                    response.success = true;
                     resolve(response);
 
                 })
@@ -335,6 +336,7 @@ class CustomerService {
                     if (Object.keys(response).includes('error')) {
                         reject(response);
                     } else {
+                        response.success = true;
                         resolve(response);
                     }
                 });
@@ -350,6 +352,7 @@ class CustomerService {
                         }
 
                         response.response = rows;
+                        response.success = true;
                         response.fields = fields;
                         resolve(response);
 
@@ -448,7 +451,7 @@ class CustomerService {
                             };
                             conn.query(
                                 query,
-                                ...nL,
+                                ...[nL],
                                 function (err, rows, fields) {
                                     console.log(rows);
                                     if (err) {
@@ -480,6 +483,7 @@ class CustomerService {
                     if (Object.keys(response).includes('error')) {
                         reject(response);
                     } else {
+                        response.success = true;
                         resolve(response);
                     }
                 });
@@ -493,7 +497,7 @@ class CustomerService {
                             response.error.push(err);
                             reject(response);
                         }
-
+                        response.success = true;
                         response.response = rows;
                         response.fields = fields;
                         resolve(response);

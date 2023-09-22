@@ -35,6 +35,7 @@ class AuthService {
                     response.success = true;
                 }
                 console.log(JSON.stringify(response));
+                response.success = true;
                 resolve(response);
             });
 
@@ -129,6 +130,7 @@ class AuthService {
                                         });
                                 }
                             }
+                            response.success = true;
                             resolve(response);
                         }
                     } else {

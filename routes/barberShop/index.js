@@ -119,7 +119,7 @@ router.delete('/barberShop', verifyDeletionToken, async (req, res) => {
     try {
         const authorizedUser = req.authorizedUser;
         console.log(authorizedUser);
-        const wppId = authorizedUser.response[0]['wppId'];
+        const wppId = authorizedUser.wppId;
         console.log(wppId);
         //comma separeted
         const ids = req.header('ids')

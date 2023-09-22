@@ -56,6 +56,7 @@ class DatabaseUtil {
 
                         response.response = rows;
                         response.fields = fields;
+                        response.success = true;
                         resolve(response);
 
                     })

@@ -49,7 +49,7 @@ class AppointmentService {
                 JOIN barberShop AS bs ON a.barberShop = bs.id 
                 JOIN barberShopWorker AS bsw ON a.barberShopWorker = bsw.id 
                 JOIN barber AS b ON b.id = bsw.worker
-                JOIN customer AS c ON c.id = a.customer
+                LEFT JOIN customer AS c ON c.id = a.customer
                 JOIN city AS cy ON cy.id = bs.city
                 JOIN barberShopWorkerService AS s ON a.service = s.id
                 WHERE bs.wppId = ? AND a.appointmentStatus = ?`,
@@ -189,7 +189,7 @@ class AppointmentService {
                 JOIN barberShop AS bs ON a.barberShop = bs.id 
                 JOIN barberShopWorker AS bsw ON a.barberShopWorker = bsw.id 
                 JOIN barber AS b ON b.id = bsw.worker
-                JOIN customer AS c ON c.id = a.customer
+                LEFT JOIN customer AS c ON c.id = a.customer
                 JOIN city AS cy ON cy.id = bs.city 
                 JOIN barberShopWorkerService AS s ON a.service = s.id
                 WHERE b.id = ? AND bs.id = ?`,
@@ -294,6 +294,7 @@ class AppointmentService {
 
                     response.response = rows;
                     response.fields = fields;
+                    response.success = true;
                     resolve(response);
 
                 })
@@ -368,7 +369,7 @@ class AppointmentService {
             if ([...newList].length > 1) {
                 console.log([...newList].length);
                 const promises = [];
-                pool.getConnection( async (err, conn) => {
+                pool.getConnection(async (err, conn) => {
                     if (err) {
                         response.error = []
                         response.error.push(err);
@@ -400,20 +401,21 @@ class AppointmentService {
                         });
                     }
                     for await (const nL of newList) {
-                        await queryPromise(nL).then( res => {
+                        await queryPromise(nL).then(res => {
                             response.response.push(res.response[0]);
                         })
-                        .catch( err => {
-                            if ( !Object.keys(response).includes('error') ) {
-                                response.error = []; 
-                            }
-                            response.error.push(err); 
-                        });
+                            .catch(err => {
+                                if (!Object.keys(response).includes('error')) {
+                                    response.error = [];
+                                }
+                                response.error.push(err);
+                            });
                     }
                     conn.release();
                     if (Object.keys(response).includes('error')) {
                         reject(response);
                     } else {
+                        response.success = true;
                         resolve(response);
                     }
                 });
@@ -430,6 +432,7 @@ class AppointmentService {
 
                         response.response = rows;
                         response.fields = fields;
+                        response.success = true;
                         resolve(response);
 
                     })
@@ -491,13 +494,13 @@ class AppointmentService {
             let setStatement = 'WHERE (a.customer=? OR bs.wppId=?) AND ';
             for (const key of keys) {
                 if (keys.indexOf(key) == 0) {
-                    setStatement += 'a.'+key+'=?';
+                    setStatement += 'a.' + key + '=?';
                     // for (const itemStr of newList) {
                     //     if ( newList.indexOf(itemStr) > 1 )
                     //     setStatement += ',?';
                     // }
                     // setStatement += ')';
-                } 
+                }
                 // else {'
                 //     if (keys.indexOf(key) == keys.length - 1) {
                 //         setStatement += ' AND ' + key + '=? ';
@@ -513,7 +516,7 @@ class AppointmentService {
             if ([...newList].length > 1) {
                 console.log([...newList].length);
                 const promises = [];
-                pool.getConnection( async (err, conn) => {
+                pool.getConnection(async (err, conn) => {
                     if (err) {
                         response.error = []
                         response.error.push(err);
@@ -545,20 +548,21 @@ class AppointmentService {
                         });
                     }
                     for await (const nL of newList) {
-                        await queryPromise(nL).then( res => {
+                        await queryPromise(nL).then(res => {
                             response.response.push(res.response[0]);
                         })
-                        .catch( err => {
-                            if ( !Object.keys(response).includes('error') ) {
-                                response.error = []; 
-                            }
-                            response.error.push(err); 
-                        });
+                            .catch(err => {
+                                if (!Object.keys(response).includes('error')) {
+                                    response.error = [];
+                                }
+                                response.error.push(err);
+                            });
                     }
                     conn.release();
                     if (Object.keys(response).includes('error')) {
                         reject(response);
                     } else {
+                        response.success = true;
                         resolve(response);
                     }
                 });
@@ -575,6 +579,7 @@ class AppointmentService {
 
                         response.response = rows;
                         response.fields = fields;
+                        response.success = true;
                         resolve(response);
 
                     })
