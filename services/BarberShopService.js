@@ -59,9 +59,9 @@ class BarberShopService {
                     //     "modifiedBy": null,
                     //     "createdAt": "2023-08-08T04:46:46.000Z",
                     //     "modifiedAt": "2023-08-08T04:46:46.000Z",
-                    //     "customerId": "555499026453@c.us",
-                    //     "customerName": "Gabriel",
-                    //     "customerPhone": "555499026453",
+                    //     "BarberShopId": "555499026453@c.us",
+                    //     "BarberShopName": "Gabriel",
+                    //     "BarberShopPhone": "555499026453",
                     //     "barberShopId": 1,
                     //     "barberShopName": "Barbearia do Gabriel",
                     //     "barberShopPhone": "",
@@ -110,7 +110,7 @@ class BarberShopService {
                 bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId
                 FROM barberShop AS bs
                 JOIN city AS cy ON cy.id = bs.city`,
-                // [customerId],
+                // [BarberShopId],
                 function (err, rows, fields) {
                     if (err) reject(err);
                     // {
@@ -254,7 +254,7 @@ class BarberShopService {
             const pool = this.database.getPool();
             const newList = [];
             const keys = [
-                'name', 'city', 
+                'name', 'city',
                 // 'availableDays', 'availableHours', 
                 'neighborhood', 'street', 'number', 'complement', 'phone', 'geolocationLatitude', 'geolocationLongitude', 'wppId'
             ]
@@ -290,7 +290,7 @@ class BarberShopService {
             if ([...newList].length > 1) {
                 console.log([...newList].length);
                 const promises = [];
-                pool.getConnection( async (err, conn) => {
+                pool.getConnection(async (err, conn) => {
                     if (err) {
                         response.error = []
                         response.error.push(err);
@@ -322,15 +322,15 @@ class BarberShopService {
                         });
                     }
                     for await (const nL of newList) {
-                        await queryPromise(nL).then( res => {
+                        await queryPromise(nL).then(res => {
                             response.response.push(res.response[0]);
                         })
-                        .catch( err => {
-                            if ( !Object.keys(response).includes('error') ) {
-                                response.error = []; 
-                            }
-                            response.error.push(err); 
-                        });
+                            .catch(err => {
+                                if (!Object.keys(response).includes('error')) {
+                                    response.error = [];
+                                }
+                                response.error.push(err);
+                            });
                     }
                     conn.release();
                     if (Object.keys(response).includes('error')) {
@@ -506,6 +506,242 @@ class BarberShopService {
         //     }
         // })
     }
+
+
+    async deleteBarberShops(jsonData, authorizedWppId) {
+        if (typeof jsonData == 'string') {
+            try {
+                jsonData = JSON.parse(jsonData);
+            } catch (error) {
+                console.error('Error: expected a valid JSON as argument.\n' + error);
+            }
+        }
+        const newBarberShopsList = [];
+        if (Array.isArray(jsonData)) {
+            console.log('newBarberShop Batch Input rows: ' + jsonData.length);
+            console.log('newBarberShop Batch first input: ' + JSON.stringify(jsonData[0], null, 4));
+            for (const BarberShopRow of jsonData) {
+                const BarberShop = new BarberShopClass(BarberShopRow);
+                const BarberShopRecord = BarberShop.toDatabaseRecord();
+                newBarberShopsList.push(BarberShopRecord);
+            }
+        } else {
+            console.log('newBarberShop Input: ' + JSON.stringify(jsonData, null, 4));
+            const BarberShop = new BarberShopClass(jsonData);
+            const BarberShopRecord = BarberShop.toDatabaseRecord();
+            newBarberShopsList.push(BarberShopRecord);
+        }
+        console.log('New BarberShops: ' + JSON.stringify(newBarberShopsList, null, 4));
+
+        return new Promise(async (resolve, reject) => {
+            const response = {
+                success: false,
+                response: []
+            }
+            if (newBarberShopsList.length == 0) { response.error = ['Error: empty list. Nothing to update']; reject(response) };
+            const pool = this.database.getPool();
+            const newList = [];
+            const keys = [
+                'id'
+            ]
+            for (const BarberShop of newBarberShopsList) {
+                let BarberShopOrderedValues = [];
+                BarberShopOrderedValues.push(authorizedWppId || null);
+                // BarberShopOrderedValues.push(authorizedWppId || null);
+                // for (const key of keys) {
+                //     BarberShopOrderedValues.push(BarberShop[key] || null);
+                // }
+                // if (BarberShopOrderedValues[BarberShopOrderedValues.length - 1] == null) {
+                //     response.error = ['Error to delete BarberShop. Id cannot be null. Record index: ' + newList.length - 1];
+                //     reject(response);
+                // }
+                newList.push(BarberShopOrderedValues);
+            }
+            console.log('Values >  ' + JSON.stringify(newList, null, 4));
+            // const updateTable = 'DELETE bsw FROM barberShop AS bs ' +
+            //     'INNER JOIN barberShopWorker AS bsw ON bsw.barberShop=bs.id ';
+            // // 'INNER JOIN appointments AS a ON a.barberShop=bs.id';
+            // let setStatement = ' WHERE bs.wppId=? ';
+            const updateTable = 'DELETE s FROM barberShop AS bs ' +
+                'INNER JOIN barberShopWorkerService AS s ON s.barberShop=bs.id ';
+            // 'INNER JOIN appointments AS a ON a.barberShop=bs.id';
+            let setStatement = ' WHERE bs.wppId=? ';
+
+
+            for (const key of keys) {
+                if (keys.indexOf(key) == 0) {
+                    // setStatement += 'bs.'+key+'=?';
+                    // for (const itemStr of newList) {
+                    //     if ( newList.indexOf(itemStr) > 1 )
+                    //     setStatement += ',?';
+                    // }
+                    // setStatement += ')';
+                }
+                // else {'
+                //     if (keys.indexOf(key) == keys.length - 1) {
+                //         setStatement += ' AND ' + key + '=? ';
+                //     } else {
+                //         setStatement += ' AND ' + key + '=?';
+                //     }
+                // }
+            }
+            const query = updateTable + setStatement;
+            console.log(query);
+            console.log(...newList);
+
+            if ([...newList].length > 1) {
+                console.log([...newList].length);
+                const promises = [];
+                pool.getConnection(async (err, conn) => {
+                    if (err) {
+                        response.error = []
+                        response.error.push(err);
+                        reject(response);
+                    }
+                    const queryPromise = async (nL) => {
+                        // console.log([Object.values(el)]);
+                        return new Promise((resolve, reject) => {
+                            const res = {
+                                response: []
+                            };
+                            conn.query(
+                                query,
+                                ...nL,
+                                function (err, rows, fields) {
+                                    console.log(rows);
+                                    if (err) {
+                                        if (!Object.keys(res).includes('error')) {
+                                            res.error = [];
+                                        }
+                                        res.error.push(err);
+                                        reject(res);
+                                    } else {
+                                        res.response.push(rows);
+                                        // res.fields = fields;
+                                        resolve(res);
+                                    }
+                                })
+                        });
+                    }
+                    for await (const nL of newList) {
+                        await queryPromise(nL).then(res => {
+                            response.response.push(res.response[0]);
+                        })
+                            .catch(err => {
+                                if (!Object.keys(response).includes('error')) {
+                                    response.error = [];
+                                }
+                                response.error.push(err);
+                            });
+                    }
+                    conn.release();
+                    if (Object.keys(response).includes('error')) {
+                        reject(response);
+                    } else {
+                        resolve(response);
+                    }
+                });
+            } else {
+                pool.query(
+                    query,
+                    [newList[0]],
+                    function (err, rows, fields) {
+                        if (err) {
+                            response.error = [];
+                            response.error.push(err);
+                            reject(response);
+                        }
+
+                        response.response = rows;
+                        response.fields = fields;
+
+                        // const updateTable2 = 'DELETE a FROM barberShop AS bs ' +
+                        //     'INNER JOIN appointment AS a ON a.barberShop=bs.id ';
+                        // // 'INNER JOIN appointments AS a ON a.barberShop=bs.id';
+                        // let setStatement2 = ' WHERE bs.wppId=? ';
+
+                        const updateTable2 = 'DELETE a FROM barberShop AS bs ' +
+                        'INNER JOIN appointment AS a ON a.barberShop=bs.id ';
+                        // 'INNER JOIN appointments AS a ON a.barberShop=bs.id';
+                        let setStatement2 = ' WHERE bs.wppId=? ';
+
+                        const query2 = updateTable2 + setStatement2;
+
+                        pool.query(
+                            query2,
+                            [newList[0]],
+                            function (err, rows, fields) {
+
+                                if (err) {
+                                    response.error = [];
+                                    response.error.push(err);
+                                    reject(response);
+                                }
+
+                                response.response = rows;
+                                response.fields = fields;
+                                // resolve(response);
+
+                                const updateTable3 = 'DELETE bsw FROM barberShop AS bs ' +
+                                    'INNER JOIN barberShopWorker AS bsw ON bsw.barberShop=bs.id ';
+                                // 'INNER JOIN appointments AS a ON a.barberShop=bs.id';
+                                let setStatement3 = ' WHERE bs.wppId=? ';
+                                const query3 = updateTable3 + setStatement3;
+
+                                pool.query(
+                                    query3,
+                                    [newList[0]],
+                                    function (err, rows, fields) {
+                                        if (err) {
+                                            response.error = [];
+                                            response.error.push(err);
+                                            reject(response);
+                                        }
+
+                                        response.response = rows;
+                                        response.fields = fields;
+                                        // resolve(response);
+
+                                        const updateTable4 = 'DELETE bs FROM barberShop AS bs ';
+                                        // 'INNER JOIN appointment AS a ON a.barberShop=bs.id ';
+                                        // 'INNER JOIN appointments AS a ON a.barberShop=bs.id';
+                                        let setStatement4 = ' WHERE bs.wppId=? ';
+                                        const query4 = updateTable4 + setStatement4;
+
+                                        pool.query(
+                                            query4,
+                                            [newList[0]],
+                                            function (err, rows, fields) {
+                                                if (err) {
+                                                    response.error = [];
+                                                    response.error.push(err);
+                                                    reject(response);
+                                                }
+
+                                                response.response = rows;
+                                                response.fields = fields;
+                                                resolve(response);
+
+                                                // const updateTable3 = 'DELETE bs FROM barberShop AS bs ';
+
+                                                // let setStatement3 = ' WHERE bs.wppId=? ';
+
+                                                // const query3 = updateTable3 + setStatement3;
+
+
+                                            })
+                                        // resolve(response);
+
+                                    })
+
+                            })
+                        // resolve(response);
+
+                    })
+            }
+        })
+    }
+
 
 }
 
