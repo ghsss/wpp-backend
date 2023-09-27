@@ -29,7 +29,17 @@ const { AuthRouter } = require('./routes/auth');
 const { BarberShopRouter } = require('./routes/barberShop');
 const { CustomerRouter } = require('./routes/customer');
 const { BarberRouter } = require('./routes/barber');
+
+const cors = require('cors');
 const app = express();
+
+// enabling CORS for some specific origins only.
+let corsOptions = {
+    // origin : ['http://localhost:5500'],
+    origin : '*',
+    methods: ['GET', 'POST ','PUT', 'UPDATE', 'DELETE']
+ }
+app.use(cors(corsOptions));
 
 app.use(AuthRouter);
 app.use(AppointmentStatusRouter);
@@ -37,6 +47,8 @@ app.use(AppointmentRouter);
 app.use(BarberShopRouter);
 app.use(CustomerRouter);
 app.use(BarberRouter);
+
+// app.use(cors());
 
 app.get('/', async (req, res) => {
     res.send('Hello world!');

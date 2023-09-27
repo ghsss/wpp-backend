@@ -107,7 +107,11 @@ router.get('/auth', this.isAuthorized, async (req, res) => {
 
     try {
         console.log('Headers: ' + JSON.stringify(req.headers, null, 4));
-        await AuthService.login(req.header('wppId'), req.header('userType'))
+        const authorizedUser = req.authorizedUser;
+        console.log(authorizedUser);
+        const wppId = authorizedUser.response[0]['wppId'];
+        console.log(wppId);
+        await AuthService.login(wppId, req.header('userType'))
             .then(logged => {
                 res.statusCode = 200;
                 res.send(logged);

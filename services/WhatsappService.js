@@ -128,9 +128,9 @@ class WhatsappService {
                 if ( !Object.keys(response).includes('error') ) {
                     response.error = [err.toString()];
                 } else {
-                    
                     response.error.push(err.toString());
                 }
+                this.getClientState();
             });
         }
         return response;
@@ -239,9 +239,14 @@ class WhatsappService {
             ];
             const clientState = await client.getState();
             console.log('CLIENT STATE: ' + clientState);
-            if (errorStates.indexOf(clientState) < 0) {
+            if (errorStates.indexOf(clientState) > -1) {
                 console.error('Client error. Restart the client and try again.');
-            } else if (unpairedStates.indexOf(clientState) < 0) {
+                client = new Client({
+                    authStrategy: new LocalAuth({ clientId: "barbershop", headless: false })
+                    // authStrategy: new NoAuth()
+                });
+                this.start();
+            } else if (unpairedStates.indexOf(clientState) > -1 ) {
                 console.error('Client is unpaired. Please scan the QR Code and try again');
             } else {
                 console.log('Client connected. Wait some time and try again or restart the client.');
