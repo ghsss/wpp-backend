@@ -154,6 +154,16 @@ class WhatsappService {
         return chats;
     }
 
+    async getChatById(wppId) {
+        const chats = await this.#client.getChats();
+        return chats;
+    }
+
+    async getContactById(wppId) {
+        const chats = await this.#client.getContactById(wppId);
+        return chats;
+    }
+
     async processIncomingMessages(msg = Message) {
 
         const commands = {

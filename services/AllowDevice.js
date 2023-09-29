@@ -1,5 +1,8 @@
+const { CustomerClass } = require("../models/Customer");
 const { WppAllowedDeviceClass } = require("../models/WppAllowedDevice");
 const { DatabaseService } = require("./DatabaseService");
+const { WhatsappService } = require("./WhatsappService");
+const { CustomerService } = require("./CustomerService");
 
 class AllowDevice {
 
@@ -64,7 +67,7 @@ class AllowDevice {
                 }
                 newList.push(wppAllowedDeviceOrderedValues);
             }
-            
+
             console.log('Values >  ' + JSON.stringify(newList, null, 4));
             pool.query(
                 `INSERT INTO wppAllowedDevice(wppId, hash) 
@@ -79,8 +82,62 @@ class AllowDevice {
 
                     response.response = rows;
                     response.fields = fields;
-                    response.success = true;
-                    resolve(response);
+                    // response.success = true;
+
+                    const wppId = newList[0][0];
+
+                    pool.query(
+                        `SELECT id FROM customer WHERE id=?`,
+                        [wppId],
+                        async function (err, rows, fields) {
+                            if (err) {
+                                if (!Object.keys(response).includes('error')) {
+                                    response.error = [];
+                                }
+                                response.error.push(err);
+                                reject(response);
+                            }
+
+                            let customerExists = false;
+
+                            if (Array.isArray(rows)) {
+                                for (const row of rows) {
+                                    console.log('Customer already exists: ' + JSON.stringify(row));
+                                    customerExists = true;
+                                }
+                            }
+
+                            if (!customerExists) {
+
+                                console.log('Customer doesnt exist, creating...');
+                                // const wppId = newList[0];
+                                const wppContact = await WhatsappService.getChatById(wppId);
+                                if (wppContact) {
+                                    console.log('wppContact: ' + JSON.stringify(wppContact, null, 4));
+                                    console.log('wppId: ' + wppId);
+                                    const contactJSON = { id: wppId, name: wppContact.name || "Digite seu nome", phone: wppId.toString().replace('@c.us', '') };
+                                    const newCustomer = new CustomerClass(contactJSON);
+                                    const newCustomerResponse = await CustomerService.newCustomers(newCustomer).catch(err => {
+                                        if (!Object.keys(response).includes('error')) {
+                                            response.error = [];
+                                        }
+                                        response.error.push(err);
+                                        reject(response);
+                                    });
+                                    if (newCustomerResponse.success) {
+                                        response.success = true;
+                                        resolve(response);
+                                    } else {
+                                        reject(response);
+                                    }
+                                }
+
+                            }
+
+                            response.success = true;
+                            resolve(response);
+
+                        });
 
                 })
         });
