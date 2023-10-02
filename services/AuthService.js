@@ -99,7 +99,7 @@ class AuthService {
                         reject(response);
                     }
                     // Connection is automatically released when query resolves
-                    if (Array.isArray(rows)) {
+                    if (Array.isArray(rows) && typeof rows[0] !== 'undefined' && rows[0] != null) {
                         console.log('Auth first row: ' + JSON.stringify(rows[0], null, 4));
                         for await (const row of rows) {
                             response.success = true;
@@ -121,6 +121,7 @@ class AuthService {
                                             reject(err2);
                                             response.error = err2;
                                         });
+                                    console.log('');
                                 } else {
                                     console.log(JSON.stringify(response.response[0].user.appointments, null, 4));
                                     response.response[0].user.appointments = await AppointmentService.getBarberShopAppointments(wppId)//await defaultOpts['defaultAppointments'][upperCaseOption](wppId)
@@ -130,11 +131,14 @@ class AuthService {
                                         });
                                 }
                             }
-                            response.success = true;
-                            resolve(response);
+                            // response.success = true;
                         }
+                        resolve(response);
                     } else {
-                        throw err;
+                        response.error = 'Usuário não existe';
+                        delete response.appointments;
+                        response.response = [];
+                        reject(response);
                     }
                 });
             });

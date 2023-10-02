@@ -155,7 +155,7 @@ class WhatsappService {
     }
 
     async getChatById(wppId) {
-        const chats = await this.#client.getChats();
+        const chats = await this.#client.getChatById(wppId);
         return chats;
     }
 

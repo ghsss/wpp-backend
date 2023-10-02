@@ -111,11 +111,13 @@ class AllowDevice {
 
                                 console.log('Customer doesnt exist, creating...');
                                 // const wppId = newList[0];
-                                const wppContact = await WhatsappService.getChatById(wppId);
+                                const wppContact = await WhatsappService.getContactById(wppId);
                                 if (wppContact) {
                                     console.log('wppContact: ' + JSON.stringify(wppContact, null, 4));
                                     console.log('wppId: ' + wppId);
-                                    const contactJSON = { id: wppId, name: wppContact.name || "Digite seu nome", phone: wppId.toString().replace('@c.us', '') };
+                                    console.log('wppContact.name: ' + wppContact.name);
+                                    const wppContactName = wppContact.name || "Digite seu nome";
+                                    const contactJSON = { id: wppId, name: wppContactName, phone: wppId.toString().replace('@c.us', '') };
                                     const newCustomer = new CustomerClass(contactJSON);
                                     const newCustomerResponse = await CustomerService.newCustomers(newCustomer).catch(err => {
                                         if (!Object.keys(response).includes('error')) {

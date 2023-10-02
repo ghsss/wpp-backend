@@ -31,6 +31,7 @@ const { CustomerRouter } = require('./routes/customer');
 const { BarberRouter } = require('./routes/barber');
 
 const cors = require('cors');
+const { CitiesRouter } = require('./routes/availableCities');
 const app = express();
 
 // enabling CORS for some specific origins only.
@@ -47,6 +48,7 @@ app.use(AppointmentRouter);
 app.use(BarberShopRouter);
 app.use(CustomerRouter);
 app.use(BarberRouter);
+app.use(CitiesRouter);
 
 // app.use(cors());
 
