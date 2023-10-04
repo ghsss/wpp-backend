@@ -34,9 +34,10 @@ router.get('/barberShops', isAuthorized, async (req, res) => {
 router.get('/barberShop/:wppId', isAuthorized, async (req, res) => {
 
     try {
-        const authorizedUser = req.authorizedUser;
-        console.log(authorizedUser);
-        const wppId = authorizedUser.response[0]['wppId'];
+        // const authorizedUser = req.authorizedUser;
+        // console.log(authorizedUser);
+        // const wppId = authorizedUser.response[0]['wppId'];
+        const wppId = req.params.wppId;
         console.log(wppId);
         await BarberShopService.getBarberShopByWppId(wppId)
         // await BarberShopService.getBarberShops()

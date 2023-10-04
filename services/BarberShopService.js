@@ -1,4 +1,5 @@
 const { BarberShopClass } = require("../models/BarberShop");
+const { BarberShopWorkerServiceService } = require("./BarberShopWorkerServiceService");
 // const { BarberShopStatusService } = require("./BarberShopStatusService");
 const { DatabaseService } = require("./DatabaseService");
 
@@ -41,13 +42,11 @@ class BarberShopService {
                 bs.id as barberShopId, bs.name as barberShopName, bs.phone as barberShopPhone, bs.city as barberShopCity, cy.name as barberShopCityName, 
                 bs.neighborhood as barberShopNeighborhood, bs.street as barberShopStreet, bs.number as barberShopNumber, bs.complement barberShopComplement, 
                 bs.availableDays, bs.availableHours, 
-                bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId,
-                b.id AS workerWppId, b.name AS workerName, b.phone AS workerPhone, bsw.id AS workerId 
+                bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId
                 FROM barberShop AS bs
-                JOIN barberShopWorker AS bsw ON bs.id = bsw.barberShop 
-                JOIN barber AS b ON b.id = bsw.worker
                 JOIN city AS cy ON cy.id = bs.city 
-                WHERE bs.wppId = ?`,
+                WHERE bs.wppId = ?
+                GROUP BY bs.wppId`,
                 [barberShopWppId],
                 function (err, rows, fields) {
                     if (err) reject(err);
@@ -85,9 +84,38 @@ class BarberShopService {
                             let barberShopStatus = new BarberShopClass(row);
                             newList.push(barberShopStatus);
                         }
+                        pool.query(
+                            `SELECT  
+                            b.id AS workerWppId, b.name AS workerName, b.phone AS workerPhone, bsw.id AS workerId 
+                            FROM barberShopWorker AS bsw 
+                            JOIN barberShop AS bs ON bs.id = bsw.barberShop 
+                            JOIN barber AS b ON b.id = bsw.worker
+                            WHERE bs.wppId = ?`,
+                            [barberShopWppId],
+                            async function (err2, rows2, fields2) {
+                                if (err2) {
+                                    reject(err2);
+                                }
+                                console.log('Workers: ' + JSON.stringify(rows2));
+                                if (Array.isArray(rows2)) {
+                                    for await (let row2 of rows2) {
+                                        const workerServices = await BarberShopWorkerServiceService.getBarberShopServicesByWorkerId(barberShopWppId, row2.workerId);
+                                        row2.workerServices = workerServices;
+                                    }
+                                    newList.forEach(item => {
+                                        item.workers = rows2;
+                                    });
+                                    resolve(newList)
+                                } else {
+                                    resolve(newList)
+                                }
+
+                            });
+
+                    } else {
+                        resolve(newList);
                     }
                     console.log('List: ' + JSON.stringify(newList));
-                    resolve(newList);
                 });
         });
 
@@ -256,7 +284,7 @@ class BarberShopService {
             const newList = [];
             const keys = [
                 'name', 'city',
-                // 'availableDays', 'availableHours', 
+                'availableDays', 'availableHours', 
                 'neighborhood', 'street', 'number', 'complement', 'phone', 'geolocationLatitude', 'geolocationLongitude', 'wppId'
             ]
             for (const appointment of newAppointmentsList) {
