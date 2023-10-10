@@ -31,12 +31,39 @@ router.get('/barberShopWorkers', isAuthorized, async (req, res) => {
 
 });
 
+router.get('/barberShop/:barberShopId/worker/:wppId', isAuthorized, async (req, res) => {
+
+    try {
+        const authorizedUser = req.authorizedUser;
+        console.log(authorizedUser);
+        // const wppId = authorizedUser.response[0]['wppId'];
+        const barberShopId = req.params.barberShopId;
+        const wppId = req.params.wppId;
+        console.log(wppId);
+        await BarberShopWorkerService.getBarberShopWorkersByBarberShopIdAndWppId(barberShopId, wppId)
+        // await BarberShopWorkerService.getBarberShopWorkers()
+        .then( barberShop =>  {
+            res.statusCode = 200;
+            res.send(barberShop);
+        })
+        .catch( err => {
+            res.statusCode = 400;
+            res.send(err);
+        });
+    } catch (error) {
+        res.statusCode = 500;
+        res.send(error);
+    }
+
+});
+
 router.get('/barberShopWorker/:wppId', isAuthorized, async (req, res) => {
 
     try {
         const authorizedUser = req.authorizedUser;
         console.log(authorizedUser);
-        const wppId = authorizedUser.response[0]['wppId'];
+        // const wppId = authorizedUser.response[0]['wppId'];
+        const wppId = req.params.wppId;
         console.log(wppId);
         await BarberShopWorkerService.getBarberShopWorkersByWppId(wppId)
         // await BarberShopWorkerService.getBarberShopWorkers()

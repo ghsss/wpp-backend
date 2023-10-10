@@ -28,6 +28,31 @@ router.get('/barberShop/services', isAuthorized, async (req, res) => {
 
 });
 
+router.get('/barberShop/:barberShopId/service/:serviceId', isAuthorized, async (req, res) => {
+
+    try {
+        const authorizedUser = req.authorizedUser;
+        console.log(authorizedUser);
+        const wppId = authorizedUser.response[0]['wppId'];
+        const barberShopId = req.params.barberShopId;
+        const serviceId = req.params.serviceId;
+        console.log(wppId);
+        await BarberShopWorkerServiceService.getBarberShopServiceByBarberShopAndServiceId(barberShopId, serviceId)
+        .then( barberShopWorkerServices =>  {
+            res.statusCode = 200;
+            res.send(barberShopWorkerServices);
+        })
+        .catch( err => {
+            res.statusCode = 400;
+            res.send(err);
+        });
+    } catch (error) {
+        res.statusCode = 500;
+        res.send(error);
+    }
+
+});
+
 router.post('/barberShop/services', isAuthorized, async (req, res) => {
 
     try {

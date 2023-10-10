@@ -1,4 +1,5 @@
 const { BarberShopWorkerClass } = require("../models/BarberShopWorker");
+const { BarberShopWorkerServiceService } = require("./BarberShopWorkerServiceService");
 const { DatabaseService } = require("./DatabaseService");
 
 class BarberShopWorkerService {
@@ -23,6 +24,71 @@ class BarberShopWorkerService {
     }
 
     refresh(jsonData) {
+
+    }
+
+    async getBarberShopWorkersByBarberShopIdAndWppId(barberShopId, BarberShopWorkerWppId) {
+        const pool = this.database.getPool();
+        const response = {
+            success: false,
+            response: []
+        }
+        const newList = [];
+        // const newList = Array();
+        return new Promise((resolve, reject) => {
+            pool.query(
+                `SELECT 
+                bsw.id, bsw.barberShop, bsw.worker, b.name AS workerName, bs.wppId AS barberShopWppId, bs.name AS barberShopName
+                FROM barberShopWorker AS bsw
+                LEFT JOIN barberShop AS bs ON bs.id = bsw.barberShop
+                LEFT JOIN barber AS b ON b.id = bsw.worker
+                WHERE bsw.barberShop = ? AND bsw.worker = ?`,
+                [barberShopId, BarberShopWorkerWppId],
+                async function (err, rows, fields) {
+                    if (err) reject(err);
+                    // {
+                    //     "id": 3,
+                    //     "dayAndTime": "2023-08-08T04:46:46.000Z",
+                    //     "createdBy": null,
+                    //     "BarberShopWorkerStatus": "Agendado",
+                    //     "modifiedBy": null,
+                    //     "createdAt": "2023-08-08T04:46:46.000Z",
+                    //     "modifiedAt": "2023-08-08T04:46:46.000Z",
+                    //     "BarberShopWorkerId": "555499026453@bsw.us",
+                    //     "BarberShopWorkerName": "Gabriel",
+                    //     "BarberShopWorkerPhone": "555499026453",
+                    //     "BarberShopWorkerId": 1,
+                    //     "BarberShopWorkerName": "Barbearia do Gabriel",
+                    //     "BarberShopWorkerPhone": "",
+                    //     "BarberShopWorkerCity": "CZO",
+                    //     "BarberShopWorkerCityName": "Carazinho",
+                    //     "BarberShopWorkerNeighborhood": "Centro",
+                    //     "BarberShopWorkerStreet": "Alexandre da Motta",
+                    //     "BarberShopWorkerNumber": "1264",
+                    //     "BarberShopWorkerComplement": null,
+                    //     "geolocationLatitude": "-28",
+                    //     "geolocationLongitude": "-53",
+                    //     "BarberShopWorkerWppId": "",
+                    //     "workerId": "555499026453@bsw.us",
+                    //     "workerName": "Gabriel",
+                    //     "workerPhone": "555499026453"
+                    // }
+                    // Connection is automatically released when query resolves
+                    if (Array.isArray(rows)) {
+                        console.log('Fist row ' + JSON.stringify(rows[0], null, 4));
+                        for await (const row of rows) {
+                            const workerServices = await BarberShopWorkerServiceService.getBarberShopServicesByWorkerId(row.barberShopWppId, row.id);
+                            row.workerServices = workerServices;
+                            let BarberShopWorkerStatus = new BarberShopWorkerClass(row);
+                            newList.push(BarberShopWorkerStatus);
+                        // }
+                        // for await (let row2 of rows2) {
+                        }
+                    }
+                    console.log('List: ' + JSON.stringify(newList));
+                    resolve(newList);
+                });
+        });
 
     }
 
