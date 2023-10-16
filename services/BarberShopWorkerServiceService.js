@@ -308,15 +308,18 @@ class BarberShopWorkerServiceService {
                 [newList],
                 function (err, rows, fields) {
                     if (err) {
+                        response.success = false;
                         response.error = [];
                         response.error.push(err);
                         reject(response);
-                    }
+                    } else {
 
-                    response.response = rows;
-                    response.fields = fields;
-                    response.success = true;
-                    resolve(response);
+                        response.response = rows;
+                        response.fields = fields;
+                        response.success = true;
+                        resolve(response);
+
+                    }
 
                 })
         });
@@ -526,17 +529,17 @@ class BarberShopWorkerServiceService {
             }
             console.log('Values >  ' + JSON.stringify(newList, null, 4));
             const updateTable = 'DELETE bsws FROM barberShopWorkerService AS bsws LEFT JOIN barberShop AS bs ON bs.id = bsws.barberShop'
-                                +' LEFT JOIN barberShopWorker AS bsw ON bsws.barberShopWorker=bsw.id';
+                + ' LEFT JOIN barberShopWorker AS bsw ON bsws.barberShopWorker=bsw.id';
             let setStatement = ' WHERE (bsw.worker=? OR bs.wppId=?) AND ';
             for (const key of keys) {
                 if (keys.indexOf(key) == 0) {
-                    setStatement += 'bsws.'+key+'=?';
+                    setStatement += 'bsws.' + key + '=?';
                     // for (const itemStr of newList) {
                     //     if ( newList.indexOf(itemStr) > 1 )
                     //     setStatement += ',?';
                     // }
                     // setStatement += ')';
-                } 
+                }
                 // else {'
                 //     if (keys.indexOf(key) == keys.length - 1) {
                 //         setStatement += ' AND ' + key + '=? ';
@@ -552,7 +555,7 @@ class BarberShopWorkerServiceService {
             if ([...newList].length > 1) {
                 console.log([...newList].length);
                 const promises = [];
-                pool.getConnection( async (err, conn) => {
+                pool.getConnection(async (err, conn) => {
                     if (err) {
                         response.error = []
                         response.error.push(err);
@@ -584,15 +587,15 @@ class BarberShopWorkerServiceService {
                         });
                     }
                     for await (const nL of newList) {
-                        await queryPromise(nL).then( res => {
+                        await queryPromise(nL).then(res => {
                             response.response.push(res.response[0]);
                         })
-                        .catch( err => {
-                            if ( !Object.keys(response).includes('error') ) {
-                                response.error = []; 
-                            }
-                            response.error.push(err); 
-                        });
+                            .catch(err => {
+                                if (!Object.keys(response).includes('error')) {
+                                    response.error = [];
+                                }
+                                response.error.push(err);
+                            });
                     }
                     conn.release();
                     if (Object.keys(response).includes('error')) {
