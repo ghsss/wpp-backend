@@ -1,5 +1,7 @@
 SHOW databases;
 
+DROP DATABASE testdb;
+
 CREATE DATABASE testdb;
 
 USE testdb;
@@ -73,7 +75,7 @@ CREATE TABLE barberShop(
 	modifiedAt timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-INSERT INTO barberShop(name, city, availableDays, availableHours, neighborhood, street, number, phone, wppId, geolocationLatitude, geolocationLongitude ) VALUES( 'Barbearia do Gabriel', 'CZO', '[1,2,3,4,5]', '[{"1":["7:30 12:00","13:30 18:00"]}],{"2":["7:30 12:00","13:30 18:00"],{"3":["7:30 12:00","13:30 18:00"]}],{"4":["7:30 12:00","13:30 18:00"]}],{"5":["7:30 12:00","13:30 18:00"]}]}]', 'Centro', 'Alexandre da Motta', '1264', '555499026453', '555499026453@c.us', -28.2905353, -52.7868431 );
+#INSERT INTO barberShop(name, city, availableDays, availableHours, neighborhood, street, number, phone, wppId, geolocationLatitude, geolocationLongitude ) VALUES( 'Barbearia do Gabriel', 'CZO', '[1,2,3,4,5]', '[{"1":["7:30 12:00","13:30 18:00"]}],{"2":["7:30 12:00","13:30 18:00"],{"3":["7:30 12:00","13:30 18:00"]}],{"4":["7:30 12:00","13:30 18:00"]}],{"5":["7:30 12:00","13:30 18:00"]}]}]', 'Centro', 'Alexandre da Motta', '1264', '555499026453', '555499026453@c.us', -28.2905353, -52.7868431 );
 SELECT * FROM barberShop;
 #DELETE FROM barberShop WHERE id > 0;
 
@@ -118,7 +120,7 @@ CREATE TABLE barberShopWorkerService(
     FOREIGN KEY (barberShopWorker) REFERENCES barberShopWorker(id)
 );
 
-ALTER TABLE barberShopWorkerService ADD COLUMN active boolean not null default true;
+ALTER TABLE barberShopWorkerService ADD COLUMN active boolean default true;
 
 #INSERT INTO barberShopWorkerService(name, durationInMinutes, availableDays, availableHours, barberShop, barberShopWorker) VALUES('Corte de cabelo', 30, '[1,2,3,4,5]', '[{"1":["7:30 12:00","13:30 18:00"]}],{"2":["7:30 12:00","13:30 18:00"],{"3":["7:30 12:00","13:30 18:00"]}],{"4":["7:30 12:00","13:30 18:00"]}],{"5":["7:30 12:00","13:30 18:00"]}]}]', 1, 1);
      
@@ -189,9 +191,9 @@ SELECT
                 JOIN barber AS b ON b.id = bsw.worker
                 JOIN city AS cy ON cy.id = bs.city;
                 
-                SELECT * FROM barberShop;
+                SELECT * FROM barberShopWorker;
                 
-                DELETE FROM barberShop WHERE id > 0;
-                                DELETE FROM barberShopWorker WHERE id > 0;
+                DELETE FROM barberShop WHERE id > 2;
+                                DELETE FROM barberShopWorker WHERE id > 2;
                 
                 SELECT * FROM wppAllowedDevice;
