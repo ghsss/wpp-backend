@@ -45,12 +45,12 @@ INSERT INTO appointmentStatus(id) VALUES ('Agendado');
 INSERT INTO appointmentStatus(id) VALUES ('Concluído');
 INSERT INTO appointmentStatus(id) VALUES ('Cancelado');
 
-DROP TABLE appointment;
-DROP TABLE barberShopWorkerService;
-DROP TABLE barberShopWorker;
-DROP TABLE barberShop;
-DROP TABLE barber;
-DROP TABLE customer;
+#DROP TABLE appointment;
+#DROP TABLE barberShopWorkerService;
+#DROP TABLE barberShopWorker;
+#DROP TABLE barberShop;
+#DROP TABLE barber;
+#DROP TABLE customer;
 
 CREATE TABLE barberShop(
 
@@ -83,7 +83,7 @@ CREATE TABLE customer (
     phone varchar(150) unique not null
 );
 
-INSERT INTO customer (id, name, phone) VALUES ('555499026453@c.us','Gabriel','555499026453');
+#INSERT INTO customer (id, name, phone) VALUES ('555499026453@c.us','Gabriel','555499026453');
 
 CREATE TABLE barber (
 	id varchar(500) primary key,
@@ -91,7 +91,7 @@ CREATE TABLE barber (
     phone varchar(150) unique not null
 );
 
-INSERT INTO barber (id, name, phone) VALUES ('555499026453@c.us','Gabriel','555499026453');
+#INSERT INTO barber (id, name, phone) VALUES ('555499026453@c.us','Gabriel','555499026453');
 
 CREATE TABLE barberShopWorker (
 	id bigint unique auto_increment,
@@ -102,7 +102,7 @@ CREATE TABLE barberShopWorker (
     FOREIGN KEY (worker) REFERENCES barber(id)
 );
 
-INSERT INTO barberShopWorker (barberShop, worker) VALUES (1, '555499026453@c.us');
+#INSERT INTO barberShopWorker (barberShop, worker) VALUES (1, '555499026453@c.us');
      
 CREATE TABLE barberShopWorkerService(
 	id bigint unique auto_increment,
@@ -118,7 +118,9 @@ CREATE TABLE barberShopWorkerService(
     FOREIGN KEY (barberShopWorker) REFERENCES barberShopWorker(id)
 );
 
-INSERT INTO barberShopWorkerService(name, durationInMinutes, availableDays, availableHours, barberShop, barberShopWorker) VALUES('Corte de cabelo', 30, '[1,2,3,4,5]', '[{"1":["7:30 12:00","13:30 18:00"]}],{"2":["7:30 12:00","13:30 18:00"],{"3":["7:30 12:00","13:30 18:00"]}],{"4":["7:30 12:00","13:30 18:00"]}],{"5":["7:30 12:00","13:30 18:00"]}]}]', 1, 1);
+ALTER TABLE barberShopWorkerService ADD COLUMN active boolean not null default true;
+
+#INSERT INTO barberShopWorkerService(name, durationInMinutes, availableDays, availableHours, barberShop, barberShopWorker) VALUES('Corte de cabelo', 30, '[1,2,3,4,5]', '[{"1":["7:30 12:00","13:30 18:00"]}],{"2":["7:30 12:00","13:30 18:00"],{"3":["7:30 12:00","13:30 18:00"]}],{"4":["7:30 12:00","13:30 18:00"]}],{"5":["7:30 12:00","13:30 18:00"]}]}]', 1, 1);
      
 CREATE TABLE appointment (
 
@@ -143,7 +145,7 @@ CREATE TABLE appointment (
 SELECT * FROM barberShop;
 SELECT * FROM barberShopWorker;
 
-INSERT INTO appointment (customer, barberShop, barberShopWorker, service, appointmentStatus, createdBy, modifiedBy) VALUES ('555499026453@c.us', 1, 1, 1, 'Agendado', '555499026453@c.us', '555499026453@c.us');
+#INSERT INTO appointment (customer, barberShop, barberShopWorker, service, appointmentStatus, createdBy, modifiedBy) VALUES ('555499026453@c.us', 1, 1, 1, 'Agendado', '555499026453@c.us', '555499026453@c.us');
 
 #DROP TABLE wppAllowedDevice;
 CREATE TABLE wppAllowedDevice(
@@ -189,6 +191,7 @@ SELECT
                 
                 SELECT * FROM barberShop;
                 
-                DELETE FROM barberShop WHERE id > 3;
+                DELETE FROM barberShop WHERE id > 0;
+                                DELETE FROM barberShopWorker WHERE id > 0;
                 
                 SELECT * FROM wppAllowedDevice;

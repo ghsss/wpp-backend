@@ -21,8 +21,7 @@ class CitiesService {
                 c.state,
                 s.name AS stateName
                 FROM city AS c
-                JOIN state AS s ON c.state = s.id
-                GROUP BY s.name`,
+                JOIN state AS s ON c.state = s.id`,
                 // [customerWppId, 'Agendado'],
                 function (err, rows, fields) {
                     if (err) reject(err);
