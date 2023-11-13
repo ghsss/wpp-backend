@@ -45,9 +45,9 @@ class BarberShopService {
                 bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId
                 FROM barberShop AS bs
                 JOIN city AS cy ON cy.id = bs.city 
-                WHERE bs.wppId = ?
+                WHERE bs.wppId = ? OR bs.id = ?
                 GROUP BY bs.wppId`,
-                [barberShopWppId],
+                [barberShopWppId, barberShopWppId],
                 function (err, rows, fields) {
                     if (err) reject(err);
                     // {
@@ -90,8 +90,8 @@ class BarberShopService {
                             FROM barberShopWorker AS bsw 
                             JOIN barberShop AS bs ON bs.id = bsw.barberShop 
                             JOIN barber AS b ON b.id = bsw.worker
-                            WHERE bs.wppId = ?`,
-                            [barberShopWppId],
+                            WHERE bs.wppId = ? OR bs.id = ?`,
+                            [barberShopWppId, barberShopWppId],
                             async function (err2, rows2, fields2) {
                                 if (err2) {
                                     reject(err2);
