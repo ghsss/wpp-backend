@@ -99,7 +99,7 @@ class BarberShopService {
                                 console.log('Workers: ' + JSON.stringify(rows2));
                                 if (Array.isArray(rows2)) {
                                     for await (let row2 of rows2) {
-                                        const workerServices = await BarberShopWorkerServiceService.getBarberShopServicesByWorkerId(barberShopWppId, row2.workerId);
+                                        const workerServices = await BarberShopWorkerServiceService.getBarberShopServicesByWorkerId(rows[0].barberShopWppId, row2.workerId);
                                         row2.workerServices = workerServices;
                                     }
                                     newList.forEach(item => {
