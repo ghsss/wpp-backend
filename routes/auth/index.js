@@ -1,3 +1,4 @@
+const { response } = require('express');
 const { AllowDevice } = require('../../services/AllowDevice');
 const { AuthService } = require('../../services/AuthService');
 const { WhatsappService } = require('../../services/WhatsappService');
@@ -11,39 +12,50 @@ module.exports.isAuthorized = async (req, res, next) => {
         console.log('Headers: ' + JSON.stringify(req.headers, null, 4));
         const token = req.header('token');
         console.log('token: ' + token);
-        if (typeof token === 'undefined') throw 'Missing required Header "token"';
+        if (typeof token === 'undefined' || token == 'undefined') throw 'Missing required Header "token"';
         if (token.length < 50) {
+            console.log('INVALID TOKEN PROVIDED: ' + token);
             res.statusCode = 400;
             res.send('Invalid token.');
-            return;
+            // return;
         } else {
-            const response = await AuthService.verifyStoredToken(token)
+            console.log('VALID TOKEN PROVIDED: ' + token);
+            await AuthService.verifyStoredToken(token)
+                .then( response => {
+
+                    if (response.success) {
+                        console.log('PROVIDED TOKEN IS VALID? ' + JSON.stringify(response));
+                        console.log();
+                        req.authorizedUser = response;
+                        next();
+                        // await AuthService.login(req.header('wppId'), req.header('userType'))
+                        // .then( logged =>  {
+                        //     res.statusCode = 200;
+                        //     res.send(logged);
+                        // })
+                        // .catch( err => {
+                        //     res.statusCode = 400;
+                        //     res.send(err);
+                        // });
+                    } else {
+                        res.statusCode = 400;
+                        res.send(JSON.stringify({ success: false, response: [], error: ['Invalid token'] }));
+                        // return;
+                    }
+
+                })
                 .catch(err => {
-                    res.statusCode = 400;
-                    throw err;
+                    res.statusCode = 401;
+                    console.log('PROVIDED TOKEN IS INVALID: ' + err);
+                    res.send(JSON.stringify({ success: false, response: [], error: ['Invalid token'] }));
+                    // throw err;
                 });
-            if (response.success) {
-                req.authorizedUser = response;
-                next();
-                // await AuthService.login(req.header('wppId'), req.header('userType'))
-                // .then( logged =>  {
-                //     res.statusCode = 200;
-                //     res.send(logged);
-                // })
-                // .catch( err => {
-                //     res.statusCode = 400;
-                //     res.send(err);
-                // });
-            } else {
-                res.statusCode = 400;
-                res.send(JSON.stringify({ success: false, response: [], error: ['Invalid token'] }));
-                return;
-            }
         }
     } catch (error) {
         res.statusCode = 500;
+        console.log('ERROR 500: ' + error);
         res.send(error);
-        return;
+        // return;
     }
 
 }
@@ -78,7 +90,7 @@ module.exports.verifyDeletionToken = async (req, res, next) => {
         });
         await promise.then(key => {
             hex = key;
-            console.log('Valid token!!!\n'+hex);
+            console.log('Valid token!!!\n' + hex);
             // if (isValid) {
             res.statusCode = 200;
             req.authorizedUser = { wppId };
@@ -112,6 +124,32 @@ router.get('/auth', this.isAuthorized, async (req, res) => {
         const wppId = authorizedUser.response[0]['wppId'];
         console.log(wppId);
         await AuthService.login(wppId, req.header('userType'))
+            .then(logged => {
+                console.log('RESPONSE LOGGED');
+                res.statusCode = 200;
+                res.send(logged);
+            })
+            .catch(err => {
+                res.statusCode = 400;
+                res.send(err);
+            });
+    } catch (error) {
+        res.statusCode = 500;
+        res.send(error);
+    }
+
+});
+
+router.delete('/logout', this.isAuthorized, async (req, res) => {
+
+    try {
+        console.log('Headers: ' + JSON.stringify(req.headers, null, 4));
+        const authorizedUser = req.authorizedUser;
+        console.log(authorizedUser);
+        const wppId = authorizedUser.response[0]['wppId'];
+        console.log(wppId);
+        const token = req.header('token');
+        await AuthService.logout(token)
             .then(logged => {
                 res.statusCode = 200;
                 res.send(logged);

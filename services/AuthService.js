@@ -19,7 +19,7 @@ class AuthService {
         console.log('Verifying stored token...');
         const pool = this.#database.getPool();
         const encryptedToken = CryptoUtil.hash(token);
-        return new Promise( (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             const response = {
                 success: false,
                 response: []
@@ -28,15 +28,20 @@ class AuthService {
                 if (err) {
                     console.log(err);
                     response.error = err;
+                    response.success = false;
                     reject(response);
                 }
-                if ( Array.isArray(rows) && rows.length > 0 ) {
+                if (Array.isArray(rows) && rows.length > 0) {
+                    console.log('rows.length > 0: '+rows.length);
                     response.response = rows;
                     response.success = true;
+                    resolve(response);
+                } else {
+                    console.log(JSON.stringify(response));
+                    response.response = rows;
+                    response.success = false;
+                    reject(response);
                 }
-                console.log(JSON.stringify(response));
-                response.success = true;
-                resolve(response);
             });
 
         });
@@ -143,6 +148,33 @@ class AuthService {
                 });
             });
         }
+    }
+
+    async logout(token) {
+        console.log('Verifying stored token...');
+        const pool = this.#database.getPool();
+        const encryptedToken = CryptoUtil.hash(token);
+        return new Promise((resolve, reject) => {
+            const response = {
+                success: false,
+                response: []
+            }
+            pool.query(`DELETE FROM wppAllowedDevice WHERE hash=?`, [encryptedToken], async function (err, rows, fields) {
+                if (err) {
+                    console.log(err);
+                    response.error = err;
+                    reject(response);
+                }
+                if (Array.isArray(rows) && rows.length > 0) {
+                    response.response = rows;
+                    response.success = true;
+                }
+                console.log(JSON.stringify(response));
+                response.success = true;
+                resolve(response);
+            });
+
+        });
     }
 
     clearInvalidTokens() {
