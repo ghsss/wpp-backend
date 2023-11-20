@@ -21,7 +21,7 @@ module.exports.isAuthorized = async (req, res, next) => {
         } else {
             console.log('VALID TOKEN PROVIDED: ' + token);
             await AuthService.verifyStoredToken(token)
-                .then( response => {
+                .then(response => {
 
                     if (response.success) {
                         console.log('PROVIDED TOKEN IS VALID? ' + JSON.stringify(response));
@@ -176,12 +176,18 @@ router.get('/verificationToken', async (req, res) => {
             { chatId: wppId, text: 'Seu token de verificação do aplicativo Barbeiro: \n*' + token + '*' }
             // { chatId: wppId, text: token }
         ])
-            .then(logged => {
+            .then(async logged => {
                 res.statusCode = 200;
+                // if ('error' in err && Array.isArray(err.error) && err.error[0].includes('Session closed')) {
+                //     await WhatsappService.initializeClient();
+                // }
                 res.send(logged);
             })
-            .catch(err => {
+            .catch(async err => {
                 res.statusCode = 400;
+                // if ('error' in err && Array.isArray(err.error) && err.error[0].includes('Session closed')) {
+                //     await WhatsappService.initializeClient();
+                // }
                 res.send(err);
             });
         // await AuthService.login(req.header('wppId'), req.header('userType'))
