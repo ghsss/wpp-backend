@@ -64,7 +64,7 @@ class BarberShopWorkerService {
             'service': 'id',
             'serviceName': 'name', 'serviceDescription': 'description', 'serviceDurationInMinutes': 'durationInMinutes',
             'availableDays': 'availableDays', 'availableHours': 'availableHours', 'barberShopId': 'barberShop',
-            'active': 'active','workerId': 'barberShopWorker'
+            'active': 'active', 'workerId': 'barberShopWorker', 'servicePrice': 'price',
         }
         const databaseRecord = {};
         for ( const prop in this ) {

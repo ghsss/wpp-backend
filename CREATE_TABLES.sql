@@ -121,6 +121,7 @@ CREATE TABLE barberShopWorkerService(
 );
 
 ALTER TABLE barberShopWorkerService ADD COLUMN active boolean default true;
+ALTER TABLE barberShopWorkerService  ADD COLUMN price float(16,2) default 0.00;
 
 #INSERT INTO barberShopWorkerService(name, durationInMinutes, availableDays, availableHours, barberShop, barberShopWorker) VALUES('Corte de cabelo', 30, '[1,2,3,4,5]', '[{"1":["7:30 12:00","13:30 18:00"]}],{"2":["7:30 12:00","13:30 18:00"],{"3":["7:30 12:00","13:30 18:00"]}],{"4":["7:30 12:00","13:30 18:00"]}],{"5":["7:30 12:00","13:30 18:00"]}]}]', 1, 1);
      

@@ -46,7 +46,7 @@ class AppointmentService {
                 bs.neighborhood as barberShopNeighborhood, bs.street as barberShopStreet, bs.number as barberShopNumber, bs.complement barberShopComplement, 
                 bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId,
                 b.id AS workerWppId, b.name AS workerName, b.phone AS workerPhone, bsw.id AS workerId,
-                s.name AS serviceName, s.durationInMinutes
+                s.name AS serviceName, s.durationInMinutes, s.price AS servicePrice
                 FROM appointment AS a 
                 JOIN barberShop AS bs ON a.barberShop = bs.id 
                 JOIN barberShopWorker AS bsw ON a.barberShopWorker = bsw.id 
@@ -114,7 +114,7 @@ class AppointmentService {
                 bs.neighborhood as barberShopNeighborhood, bs.street as barberShopStreet, bs.number as barberShopNumber, bs.complement barberShopComplement, 
                 bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId,
                 b.id AS workerWppId, b.name AS workerName, b.phone AS workerPhone, bsw.id AS workerId,
-                s.name AS serviceName, s.durationInMinutes
+                s.name AS serviceName, s.durationInMinutes, s.price AS servicePrice
                 FROM appointment AS a
                 JOIN barberShop AS bs ON a.barberShop = bs.id 
                 JOIN barberShopWorker AS bsw ON a.barberShopWorker = bsw.id 
@@ -185,7 +185,7 @@ class AppointmentService {
                 bs.neighborhood as barberShopNeighborhood, bs.street as barberShopStreet, bs.number as barberShopNumber, bs.complement barberShopComplement, 
                 bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId,
                 b.id AS workerWppId, b.name AS workerName, b.phone AS workerPhone, bsw.id AS workerId,
-                s.name AS serviceName, s.durationInMinutes
+                s.name AS serviceName, s.durationInMinutes, s.price AS servicePrice
                 FROM appointment AS a 
                 JOIN barberShop AS bs ON a.barberShop = bs.id OR a.createdBy = bs.wppId  
                 JOIN barberShopWorker AS bsw ON a.barberShopWorker = bsw.id 
@@ -193,7 +193,7 @@ class AppointmentService {
                 JOIN customer AS c ON c.id = a.customer OR a.createdBy = c.id  
                 JOIN city AS cy ON cy.id = bs.city
                 JOIN barberShopWorkerService AS s ON a.service = s.id
-                WHERE customer = ?`,
+                WHERE customer = ? ORDER BY a.dayAndTime DESC`,
                 [customerId],
                 function (err, rows, fields) {
                     if (err) reject(err);
@@ -254,7 +254,7 @@ class AppointmentService {
                 bs.neighborhood as barberShopNeighborhood, bs.street as barberShopStreet, bs.number as barberShopNumber, bs.complement barberShopComplement, 
                 bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId,
                 b.id AS workerWppId, b.name AS workerName, b.phone AS workerPhone, bsw.id AS workerId,
-                s.name AS serviceName, s.durationInMinutes
+                s.name AS serviceName, s.durationInMinutes, s.price AS servicePrice
                 FROM appointment AS a 
                 JOIN barberShop AS bs ON a.barberShop = bs.id 
                 JOIN barberShopWorker AS bsw ON a.barberShopWorker = bsw.id 
@@ -492,7 +492,7 @@ class AppointmentService {
             } else {
                 pool.query(
                     query,
-                    ...[newList],
+                    ...newList,
                     function (err, rows, fields) {
                         if (err) {
                             response.error = [];

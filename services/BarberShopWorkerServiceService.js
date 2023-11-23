@@ -44,7 +44,7 @@ class BarberShopWorkerServiceService {
 
             pool.query(
                 `SELECT 
-                a.id, a.name, a.description, a.durationInMinutes, a.availableDays, a.availableHours, a.active,
+                a.id, a.name, a.description, a.durationInMinutes, a.availableDays, a.availableHours, a.active, a.price AS servicePrice,
                 bs.id as barberShopId, bs.name as barberShopName, bs.phone as barberShopPhone, bs.city as barberShopCity, cy.name as barberShopCityName, 
                 bs.neighborhood as barberShopNeighborhood, bs.street as barberShopStreet, bs.number as barberShopNumber, bs.complement barberShopComplement, 
                 bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId,
@@ -112,7 +112,7 @@ class BarberShopWorkerServiceService {
 
             pool.query(
                 `SELECT 
-                a.id, a.name, a.description, a.durationInMinutes, a.availableDays, a.availableHours, a.active,
+                a.id, a.name, a.description, a.durationInMinutes, a.availableDays, a.availableHours, a.active, a.price AS servicePrice,
                 bs.id as barberShopId, bs.name as barberShopName, bs.phone as barberShopPhone, bs.city as barberShopCity, cy.name as barberShopCityName, 
                 bs.neighborhood as barberShopNeighborhood, bs.street as barberShopStreet, bs.number as barberShopNumber, bs.complement barberShopComplement, 
                 bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId,
@@ -180,7 +180,7 @@ class BarberShopWorkerServiceService {
 
             pool.query(
                 `SELECT 
-                a.id, a.name, a.description, a.durationInMinutes, a.availableDays, a.availableHours, a.active,
+                a.id, a.name, a.description, a.durationInMinutes, a.availableDays, a.availableHours, a.active, a.price AS servicePrice,
                 bs.id as barberShopId, bs.name as barberShopName, bs.phone as barberShopPhone, bs.city as barberShopCity, cy.name as barberShopCityName, 
                 bs.neighborhood as barberShopNeighborhood, bs.street as barberShopStreet, bs.number as barberShopNumber, bs.complement barberShopComplement, 
                 bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId,
@@ -278,7 +278,7 @@ class BarberShopWorkerServiceService {
             // barberShop bigint not null,
             // barberShopWorker bigint not null,
             const keys = [
-                'name', 'description', 'active', 'durationInMinutes', 'availableDays', 'availableHours', 'barberShop', 'barberShopWorker'
+                'name', 'description', 'active', 'durationInMinutes', 'price', 'availableDays', 'availableHours', 'barberShop', 'barberShopWorker'
             ]
             for (const barberShop of newbarberShopWorkerServicesList) {
                 let barberShopOrderedValues = [];
@@ -373,7 +373,7 @@ class BarberShopWorkerServiceService {
             // createdAt timestamp DEFAULT CURRENT_TIMESTAMP ,
             // modifiedAt timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             const keys = [
-                'name', 'description', 'active', 'durationInMinutes', 'availableDays', 'availableHours', 'barberShop', 'barberShopWorker', 'id'
+                'name', 'description', 'active', 'price', 'durationInMinutes', 'availableDays', 'availableHours', 'barberShop', 'barberShopWorker', 'id'
             ]
             for (const barberShopWorkerService of newbarberShopWorkerServicesList) {
                 let barberShopWorkerServiceOrderedValues = [];

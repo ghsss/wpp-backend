@@ -31,6 +31,26 @@ router.get('/barberShops', isAuthorized, async (req, res) => {
 
 });
 
+router.get('/barberShops/city/:city', isAuthorized, async (req, res) => {
+
+    try {
+        const city = req.params.city;
+        await BarberShopService.getBarberShopsByCity(city)
+        .then( barberShops =>  {
+            res.statusCode = 200;
+            res.send(barberShops);
+        })
+        .catch( err => {
+            res.statusCode = 400;
+            res.send(err);
+        });
+    } catch (error) {
+        res.statusCode = 500;
+        res.send(error);
+    }
+
+});
+
 router.get('/barberShop/:wppId', isAuthorized, async (req, res) => {
 
     try {

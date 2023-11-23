@@ -121,6 +121,56 @@ class BarberShopService {
 
     }
 
+    getBarberShopsByCity(city) {
+        const pool = this.database.getPool();
+        const response = {
+            success: false,
+            response: []
+        }
+        const newList = [];
+        // const newList = new Array(BarberShopClass);
+        return new Promise((resolve, reject) => {
+            pool.query(
+                `SELECT
+                bs.id as barberShopId, bs.name as barberShopName, bs.phone as barberShopPhone, bs.city as barberShopCity, cy.name as barberShopCityName,
+                bs.neighborhood as barberShopNeighborhood, bs.street as barberShopStreet, bs.number as barberShopNumber, bs.complement barberShopComplement,
+                bs.availableDays, bs.availableHours, 
+                bs.geolocationLatitude, bs.geolocationLongitude, bs.wppId as barberShopWppId
+                FROM barberShop AS bs
+                JOIN city AS cy ON cy.id = bs.city
+                WHERE bs.city = ?`,
+                [city],
+                function (err, rows, fields) {
+                    if (err) reject(err);
+                    // {
+                    //     "id": 3,
+                    //     "barberShopId": 1,
+                    //     "barberShopName": "Barbearia do Gabriel",
+                    //     "barberShopPhone": "",
+                    //     "barberShopCity": "CZO",
+                    //     "barberShopCityName": "Carazinho",
+                    //     "barberShopNeighborhood": "Centro",
+                    //     "barberShopStreet": "Alexandre da Motta",
+                    //     "barberShopNumber": "1264",
+                    //     "barberShopComplement": null,
+                    //     "geolocationLatitude": "-28",
+                    //     "geolocationLongitude": "-53",
+                    //     "barberShopWppId": "",
+                    // }
+                    // Connection is automatically released when query resolves
+                    if (Array.isArray(rows)) {
+                        console.log('Fist row ' + JSON.stringify(rows[0], null, 4));
+                        for (const row of rows) {
+                            let barberShopStatus = new BarberShopClass(row);
+                            newList.push(barberShopStatus);
+                        }
+                    }
+                    resolve(newList);
+                });
+        });
+
+    }
+
     getBarberShops() {
         const pool = this.database.getPool();
         const response = {
