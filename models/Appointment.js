@@ -130,9 +130,15 @@ class Appointment {
         for ( const prop in this ) {
             if (this.hasOwnProperty(prop) && Object.keys(databaseRecordPropsDict).includes(prop) ) {
                 // do stuff
+                if ( prop == 'dayAndTime' ) {
+                    this[prop] = this[prop].split('.')[[0]];
+                }
                 databaseRecord[databaseRecordPropsDict[prop]] = this[prop];
             } else {
                 if (this.hasOwnProperty(prop) && Object.values(databaseRecordPropsDict).includes(prop)) {
+                    if ( prop == 'dayAndTime' ) {
+                        this[prop] = this[prop].split('.')[[0]];
+                    }
                     databaseRecord[prop] = this[prop];
                 }
             }
