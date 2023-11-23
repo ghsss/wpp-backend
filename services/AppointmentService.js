@@ -54,7 +54,7 @@ class AppointmentService {
                 LEFT JOIN customer AS c ON c.id = a.customer
                 JOIN city AS cy ON cy.id = bs.city 
                 JOIN barberShopWorkerService AS s ON a.service = s.id
-                WHERE bsw.id = ? AND a.dayAndTime LIKE ?`,
+                WHERE bsw.id = ? AND a.dayAndTime LIKE ? ORDER BY a.dayAndTime DESC`,
                 [workerId, date],
                 function (err, rows, fields) {
                     if (err) reject(err);
@@ -122,7 +122,7 @@ class AppointmentService {
                 LEFT JOIN customer AS c ON c.id = a.customer
                 JOIN city AS cy ON cy.id = bs.city
                 JOIN barberShopWorkerService AS s ON a.service = s.id
-                WHERE bs.wppId = ? AND a.appointmentStatus = ?`,
+                WHERE bs.wppId = ? AND a.appointmentStatus = ? ORDER BY a.dayAndTime DESC`,
                 [barberShopWppId, 'Agendado'],
                 function (err, rows, fields) {
                     if (err) reject(err);
@@ -262,7 +262,7 @@ class AppointmentService {
                 LEFT JOIN customer AS c ON c.id = a.customer
                 JOIN city AS cy ON cy.id = bs.city 
                 JOIN barberShopWorkerService AS s ON a.service = s.id
-                WHERE b.id = ? AND bs.id = ?`,
+                WHERE b.id = ? AND bs.id = ? ORDER BY a.dayAndTime DESC`,
                 [workerId, barberShop],
                 function (err, rows, fields) {
                     if (err) reject(err);

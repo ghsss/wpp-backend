@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "5c34965e-ca72-4a34-900c-4ac4c8effcc6",
+		"_postman_id": "9152e8df-d826-4e92-8ab4-a365a3fe1a78",
 		"name": "FINAL",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22410648"
 	},
 	"item": [
 		{
@@ -12,7 +13,13 @@
 					"name": "ALL",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "localhost:3000/appointmentStatus",
 							"host": [
@@ -68,7 +75,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "[\r\n    {\r\n        \"id\": 1,\r\n        \"dayAndTime\": \"2023-09-14 20:52:58\",\r\n        \"createdBy\": \"555499026453@c.us\",\r\n        \"modifiedBy\": \"555499026453@c.us\",\r\n        \"createdAt\": \"2023-08-14T02:02:18.000Z\",\r\n        \"modifiedAt\": \"2023-08-14T02:02:18.000Z\",\r\n        \"appointmentStatus\": \"Agendado\",\r\n        \"customerId\": \"555499026453@c.us\",\r\n        \"customerName\": \"Gabriel\",\r\n        \"customerPhone\": \"555499026453\",\r\n        \"barberShopId\": 1,\r\n        \"barberShopName\": \"Barbearia do Gabriel\",\r\n        \"barberShopPhone\": \"555499026453\",\r\n        \"barberShopCity\": \"CZO\",\r\n        \"barberShopCityName\": \"Carazinho\",\r\n        \"barberShopNeighborhood\": \"Centro\",\r\n        \"barberShopStreet\": \"Alexandre da Motta\",\r\n        \"barberShopNumber\": \"1264\",\r\n        \"barberShopComplement\": null,\r\n        \"geolocationLatitude\": \"-28.290535\",\r\n        \"geolocationLongitude\": \"-52.786843\",\r\n        \"barberShopWppId\": \"555499026453@c.us\",\r\n        \"workerWppId\": \"555499026453@c.us\",\r\n        \"workerName\": \"Gabriel\",\r\n        \"workerPhone\": \"555499026453\",\r\n        \"workerId\": 1,\r\n        \"service\": 1\r\n    }\r\n]",
+							"raw": "[\r\n    {\r\n        \"id\": 1,\r\n        \"dayAndTime\": \"2023-09-14 23:25:58\",\r\n        \"createdBy\": \"555499026453@c.us\",\r\n        \"modifiedBy\": \"555499026453@c.us\",\r\n        \"createdAt\": \"2023-08-14T02:02:18.000Z\",\r\n        \"modifiedAt\": \"2023-08-14T02:02:18.000Z\",\r\n        \"appointmentStatus\": \"Agendado\",\r\n        \"customerId\": \"555499026452@c.us\",\r\n        \"customerName\": \"Gabriel\",\r\n        \"customerPhone\": \"555499026453\",\r\n        \"barberShopId\": 1,\r\n        \"barberShopName\": \"Barbearia do Gabriel\",\r\n        \"barberShopPhone\": \"555499026453\",\r\n        \"barberShopCity\": \"CZO\",\r\n        \"barberShopCityName\": \"Carazinho\",\r\n        \"barberShopNeighborhood\": \"Centro\",\r\n        \"barberShopStreet\": \"Alexandre da Motta\",\r\n        \"barberShopNumber\": \"1264\",\r\n        \"barberShopComplement\": null,\r\n        \"geolocationLatitude\": \"-28.290535\",\r\n        \"geolocationLongitude\": \"-52.786843\",\r\n        \"barberShopWppId\": \"555499026453@c.us\",\r\n        \"workerWppId\": \"555499026453@c.us\",\r\n        \"workerName\": \"Gabriel\",\r\n        \"workerPhone\": \"555499026453\",\r\n        \"workerId\": 1,\r\n        \"service\": 1\r\n    }\r\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -106,7 +113,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "[\r\n    {\r\n        \"id\": 2,\r\n        \"dayAndTime\": \"2023-08-14T04:03:19.000Z\",\r\n        \"createdBy\": \"555499026453@c.us\",\r\n        \"modifiedBy\": \"555499026453@c.us\",\r\n        \"createdAt\": \"2023-08-14T02:02:53.000Z\",\r\n        \"modifiedAt\": \"2023-08-14T02:02:53.000Z\",\r\n        \"appointmentStatus\": \"Agendado\",\r\n        \"customerId\": \"555499026453@c.us\",\r\n        \"customerName\": \"Gabriel\",\r\n        \"customerPhone\": \"555499026453\",\r\n        \"barberShopId\": 1,\r\n        \"barberShopName\": \"Barbearia do Gabriel\",\r\n        \"barberShopPhone\": \"555499026453\",\r\n        \"barberShopCity\": \"CZO\",\r\n        \"barberShopCityName\": \"Carazinho\",\r\n        \"barberShopNeighborhood\": \"Centro\",\r\n        \"barberShopStreet\": \"Alexandre da Motta\",\r\n        \"barberShopNumber\": \"1264\",\r\n        \"barberShopComplement\": null,\r\n        \"geolocationLatitude\": \"-28.290535\",\r\n        \"geolocationLongitude\": \"-52.786843\",\r\n        \"barberShopWppId\": \"555499026453@c.us\",\r\n        \"workerWppId\": \"555499026453@c.us\",\r\n        \"workerName\": \"Gabriel\",\r\n        \"workerPhone\": \"555499026453\",\r\n        \"workerId\": 1\r\n    },\r\n    {\r\n        \"id\": 1,\r\n        \"dayAndTime\": \"2023-08-14T04:02:1.000Z\",\r\n        \"createdBy\": \"555499026453@c.us\",\r\n        \"modifiedBy\": \"555499026453@c.us\",\r\n        \"createdAt\": \"2023-08-14T02:02:18.000Z\",\r\n        \"modifiedAt\": \"2023-08-14T02:06:23.000Z\",\r\n        \"appointmentStatus\": \"Agendado\",\r\n        \"customerId\": \"555499026453@c.us\",\r\n        \"customerName\": \"Gabriel\",\r\n        \"customerPhone\": \"555499026453\",\r\n        \"barberShopId\": 1,\r\n        \"barberShopName\": \"Barbearia do Gabriel\",\r\n        \"barberShopPhone\": \"555499026453\",\r\n        \"barberShopCity\": \"CZO\",\r\n        \"barberShopCityName\": \"Carazinho\",\r\n        \"barberShopNeighborhood\": \"Centro\",\r\n        \"barberShopStreet\": \"Alexandre da Motta\",\r\n        \"barberShopNumber\": \"1264\",\r\n        \"barberShopComplement\": null,\r\n        \"geolocationLatitude\": \"-28.290535\",\r\n        \"geolocationLongitude\": \"-52.786843\",\r\n        \"barberShopWppId\": \"555499026453@c.us\",\r\n        \"workerWppId\": \"555499026453@c.us\",\r\n        \"workerName\": \"Gabriel\",\r\n        \"workerPhone\": \"555499026453\",\r\n        \"workerId\": 1\r\n    }\r\n]",
+							"raw": "[\r\n    {\r\n        \"id\": 2,\r\n        \"dayAndTime\": \"2023-08-14T04:03:19.000Z\",\r\n        \"createdBy\": \"555499026453@c.us\",\r\n        \"modifiedBy\": \"555499026453@c.us\",\r\n        \"createdAt\": \"2023-08-14T02:02:53.000Z\",\r\n        \"modifiedAt\": \"2023-08-14T02:02:53.000Z\",\r\n        \"appointmentStatus\": \"Agendado\",\r\n        \"customerId\": \"555499026453@c.us\",\r\n        \"customerName\": \"Gabriel\",\r\n        \"customerPhone\": \"555499026453\",\r\n        \"barberShopId\": 1,\r\n        \"barberShopName\": \"Barbearia do Gabriel\",\r\n        \"barberShopPhone\": \"555499026453\",\r\n        \"barberShopCity\": \"CZO\",\r\n        \"barberShopCityName\": \"Carazinho\",\r\n        \"barberShopNeighborhood\": \"Centro\",\r\n        \"barberShopStreet\": \"Alexandre da Motta\",\r\n        \"barberShopNumber\": \"1264\",\r\n        \"barberShopComplement\": null,\r\n        \"geolocationLatitude\": \"-28.290535\",\r\n        \"geolocationLongitude\": \"-52.786843\",\r\n        \"barberShopWppId\": \"555499026453@c.us\",\r\n        \"workerWppId\": \"555499026453@c.us\",\r\n        \"workerName\": \"Gabriel\",\r\n        \"workerPhone\": \"555499026453\",\r\n        \"workerId\": 1\r\n    }\r\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -134,7 +141,8 @@
 							{
 								"key": "wppId",
 								"value": "555499026453@c.us",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							},
 							{
 								"key": "token",
@@ -182,7 +190,8 @@
 							{
 								"key": "wppId",
 								"value": "555499026453@c.us",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							},
 							{
 								"key": "userType",
@@ -203,6 +212,30 @@
 							"port": "3000",
 							"path": [
 								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LOGOUT",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3000/logout",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"logout"
 							]
 						}
 					},
@@ -245,7 +278,7 @@
 						"header": [
 							{
 								"key": "token",
-								"value": "131534",
+								"value": "221229",
 								"type": "text"
 							},
 							{
@@ -299,7 +332,8 @@
 									{
 										"key": "wppId",
 										"value": "555499026453@c.us",
-										"type": "text"
+										"type": "text",
+										"disabled": true
 									},
 									{
 										"key": "token",
@@ -324,13 +358,117 @@
 					]
 				},
 				{
+					"name": "barberShopWorker",
+					"item": [
+						{
+							"name": "appointments",
+							"item": [
+								{
+									"name": "Customer Appointments Copy",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "wppId",
+												"value": "555499026453@c.us",
+												"type": "text",
+												"disabled": true
+											},
+											{
+												"key": "token",
+												"value": "{{token}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "localhost:3000/barberShopWorker/1/appointments/2023-11-20",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"barberShopWorker",
+												"1",
+												"appointments",
+												"2023-11-20"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "barberShops",
+					"item": [
+						{
+							"name": "GET BarberShops",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:3000/barberShops",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"barberShops"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET BarberShops By CITY",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:3000/barberShops/city/CZO",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"barberShops",
+										"city",
+										"CZO"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "NEW Customer",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "[\r\n    {\r\n        \"customerId\": \"555499026452@c.us\",\r\n        \"customerName\": \"Gabrielz\",\r\n        \"customerPhone\": \"555499026452\"\r\n    }\r\n]",
+							"raw": "[\r\n    {\r\n        \"customerId\": \"555499026453@c.us\",\r\n        \"customerName\": \"Gabrielz\",\r\n        \"customerPhone\": \"555499026453\"\r\n    }\r\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -390,12 +528,11 @@
 							{
 								"key": "wppId",
 								"value": "555499026453@c.us",
-								"type": "default",
-								"disabled": true
+								"type": "default"
 							},
 							{
 								"key": "token",
-								"value": "{{token}}",
+								"value": "405841",
 								"type": "default"
 							}
 						],
@@ -537,10 +674,44 @@
 									},
 									{
 										"key": "ids",
-										"value": "5",
+										"value": "3,4",
 										"type": "text"
 									}
 								],
+								"url": {
+									"raw": "localhost:3000/barberShop/services",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"barberShop",
+										"services"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UPDATE Services",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "    {\r\n        \"id\": 1,\r\n        \"name\": \"Corte de cabelow\",\r\n        \"description\": \"\",\r\n        \"durationInMinutes\": 30,\r\n        \"availableDays\": \"[1,2,3,4,5]\",\r\n        \"availableHours\": \"[{\\\"1\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"2\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"],{\\\"3\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"4\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"5\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}]}]\",\r\n        \"active\": 1,\r\n        \"barberShopId\": 1,\r\n        \"barberShopName\": \"Barbearia do Gabriel\",\r\n        \"barberShopPhone\": \"555499026453\",\r\n        \"barberShopCity\": \"CZO\",\r\n        \"barberShopCityName\": \"Carazinho\",\r\n        \"barberShopNeighborhood\": \"Centro\",\r\n        \"barberShopStreet\": \"Alexandre da Motta\",\r\n        \"barberShopNumber\": \"1264\",\r\n        \"barberShopComplement\": null,\r\n        \"geolocationLatitude\": \"-28.290535\",\r\n        \"geolocationLongitude\": \"-52.786843\",\r\n        \"barberShopWppId\": \"555499026453@c.us\",\r\n        \"workerWppId\": \"555499026453@c.us\",\r\n        \"workerName\": \"Gabriel\",\r\n        \"workerPhone\": \"555499026453\",\r\n        \"workerId\": 1\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "localhost:3000/barberShop/services",
 									"host": [
@@ -670,32 +841,6 @@
 							"response": []
 						},
 						{
-							"name": "UPDATE BarberShopWorker",
-							"request": {
-								"method": "PUT",
-								"header": [
-									{
-										"key": "token",
-										"value": "{{token}}",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "[\r\n    {\r\n        \"id\": 1,\r\n        \"barberShop\": 1,\r\n        \"worker\": \"555499026453@c.us\"\r\n    }\r\n]",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": ""
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "GET BarberShopWorker",
 							"request": {
 								"method": "GET",
@@ -720,31 +865,6 @@
 							"response": []
 						},
 						{
-							"name": "GET BarberShopWorker By WppId",
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "token",
-										"value": "{{token}}",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "localhost:3000/barberShopWorker/5",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"barberShopWorker",
-										"5"
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "DELETE BarberShopWorker",
 							"request": {
 								"method": "DELETE",
@@ -761,7 +881,7 @@
 									},
 									{
 										"key": "ids",
-										"value": "4",
+										"value": "6",
 										"type": "text"
 									}
 								],
@@ -773,6 +893,31 @@
 									"port": "3000",
 									"path": [
 										"barberShopWorker"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET BarberShopWorker By WppId",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:3000/barberShopWorker/",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"barberShopWorker",
+										""
 									]
 								}
 							},
@@ -817,10 +962,16 @@
 					"name": "UPDATE BarberShop",
 					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "[\r\n    {\r\n        \"barberShopId\": 1,\r\n        \"barberShopName\": \"Barbearia do Gabriel\",\r\n        \"barberShopPhone\": \"555499026453\",\r\n        \"barberShopCity\": \"CZO\",\r\n        \"barberShopCityName\": \"Carazinho\",\r\n        \"barberShopNeighborhood\": \"Centro\",\r\n        \"barberShopStreet\": \"Alexandre da Motta\",\r\n        \"barberShopNumber\": \"1264\",\r\n        \"barberShopComplement\": null,\r\n        \"availableDays\": \"[1,2,3,4,5]\",\r\n        \"availableHours\": \"[{\\\"1\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"2\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"],{\\\"3\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"4\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"5\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}]}]\",\r\n        \"geolocationLatitude\": \"-28.290535\",\r\n        \"geolocationLongitude\": \"-52.786843\",\r\n        \"barberShopWppId\": \"555499026453@c.us\"\r\n    },\r\n    {\r\n        \"barberShopId\": 3,\r\n        \"barberShopName\": \"Barbearia do Gabriel\",\r\n        \"barberShopPhone\": \"555499026452\",\r\n        \"barberShopCity\": \"CZO\",\r\n        \"barberShopCityName\": \"Carazinho\",\r\n        \"barberShopNeighborhood\": \"Centro\",\r\n        \"barberShopStreet\": \"Alexandre da Motta\",\r\n        \"barberShopNumber\": \"1264\",\r\n        \"barberShopComplement\": null,\r\n        \"availableDays\": \"[1,2,3,4,5]\",\r\n        \"availableHours\": \"[{\\\"1\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"2\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"],{\\\"3\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"4\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"5\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}]}]\",\r\n        \"geolocationLatitude\": \"-28.290535\",\r\n        \"geolocationLongitude\": \"-52.786843\",\r\n        \"barberShopWppId\": \"555499026452@c.us\"\r\n    }\r\n]",
+							"raw": "[\r\n    {\r\n        \"barberShopId\": 1,\r\n        \"barberShopName\": \"Barbearia do Gabriezl\",\r\n        \"barberShopPhone\": \"555499026453\",\r\n        \"barberShopCity\": \"CZO\",\r\n        \"barberShopCityName\": \"Carazinho\",\r\n        \"barberShopNeighborhood\": \"Centro\",\r\n        \"barberShopStreet\": \"Alexandre da Motta\",\r\n        \"barberShopNumber\": \"1264\",\r\n        \"barberShopComplement\": null,\r\n        \"availableDays\": \"[1,2,3,4,5]\",\r\n        \"availableHours\": \"[{\\\"1\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"2\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"],{\\\"3\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"4\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"5\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}]}]\",\r\n        \"geolocationLatitude\": \"-28.290535\",\r\n        \"geolocationLongitude\": \"-52.786843\",\r\n        \"barberShopWppId\": \"555499026453@c.us\"\r\n    },\r\n    {\r\n        \"barberShopId\": 3,\r\n        \"barberShopName\": \"Barbearia do Gabriel\",\r\n        \"barberShopPhone\": \"555499026452\",\r\n        \"barberShopCity\": \"CZO\",\r\n        \"barberShopCityName\": \"Carazinho\",\r\n        \"barberShopNeighborhood\": \"Centro\",\r\n        \"barberShopStreet\": \"Alexandre da Motta\",\r\n        \"barberShopNumber\": \"1264\",\r\n        \"barberShopComplement\": null,\r\n        \"availableDays\": \"[1,2,3,4,5]\",\r\n        \"availableHours\": \"[{\\\"1\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"2\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"],{\\\"3\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"4\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}],{\\\"5\\\":[\\\"7:30 12:00\\\",\\\"13:30 18:00\\\"]}]}]\",\r\n        \"geolocationLatitude\": \"-28.290535\",\r\n        \"geolocationLongitude\": \"-52.786843\",\r\n        \"barberShopWppId\": \"555499026452@c.us\"\r\n    }\r\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -847,13 +998,18 @@
 						"header": [
 							{
 								"key": "token",
-								"value": "{{token}}",
+								"value": "194315",
 								"type": "default"
 							},
 							{
 								"key": "ids",
 								"value": "1",
 								"type": "default"
+							},
+							{
+								"key": "wppId",
+								"value": "555499026453@c.us",
+								"type": "text"
 							}
 						],
 						"url": {
@@ -888,6 +1044,57 @@
 							"port": "3000",
 							"path": [
 								"barberShops"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET BarberShop ByWpp",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3000/barberShop/555499026453@c.us",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"barberShop",
+								"555499026453@c.us"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET BarberShops By CITY",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3000/barberShops/city/CZO",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"barberShops",
+								"city",
+								"CZO"
 							]
 						}
 					},
@@ -938,7 +1145,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[\r\n    {\r\n        \"workerId\": \"555499026452@c.us\",\r\n        \"workerName\": \"Gabrielz2\",\r\n        \"workerPhone\": \"555499026452\"\r\n    }\r\n]",
+							"raw": "[\r\n    {\r\n        \"workerId\": \"555499026453@c.us\",\r\n        \"workerName\": \"Gabrielz2\",\r\n        \"workerPhone\": \"555499026453\"\r\n    }\r\n]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1001,6 +1208,30 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Cities",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:3000/cities",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"cities"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
